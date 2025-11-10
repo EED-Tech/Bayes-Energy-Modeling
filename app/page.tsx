@@ -44,45 +44,57 @@ export default function OverviewPage() {
     blue: "hsl(217, 91%, 60%)",
   }
 
+  // Mirror 'Variables & Outputs'!B41/B40 combined electricity tax totals from the spreadsheet
+  const electricitySalesTaxUser = outputs.ecooking.user.electricity_tax + outputs.emobility.user.electricity_tax
+  const electricitySalesTaxPolicy = outputs.ecooking.policy.electricity_tax + outputs.emobility.policy.electricity_tax
+
   const electricityDemandCards = [
     {
-      title: "Total Electricity Demand",
-      value: `${formatNumber(outputs.ecooking.user.electricity_gwh + outputs.emobility.user.electricity_gwh, 1)} GWh`,
+      title: "National Electricity Consumption",
+      value: `${formatNumber(outputs.nationalElectricityConsumptionTwh, 1)} TWh`,
       icon: Zap,
-      change:
-        outputs.ecooking.user.electricity_gwh +
-        outputs.emobility.user.electricity_gwh -
-        (outputs.ecooking.policy.electricity_gwh + outputs.emobility.policy.electricity_gwh),
-      changePercent:
-        outputs.ecooking.policy.electricity_gwh + outputs.emobility.policy.electricity_gwh > 0
-          ? ((outputs.ecooking.user.electricity_gwh +
-              outputs.emobility.user.electricity_gwh -
-              (outputs.ecooking.policy.electricity_gwh + outputs.emobility.policy.electricity_gwh)) /
-              (outputs.ecooking.policy.electricity_gwh + outputs.emobility.policy.electricity_gwh)) *
-            100
-          : 0,
-      policy: `${formatNumber(outputs.ecooking.policy.electricity_gwh + outputs.emobility.policy.electricity_gwh, 1)} GWh`,
+      change: 0,
+      changePercent: 0,
+      policy: "BAU projection",
       cardClass: "bg-gradient-to-br from-chart-1/10 via-chart-1/5 to-background border-chart-1/30",
       iconClass: "text-chart-1",
     },
     {
+      title: "eCooking Uptake (Policy)",
+      value: `${formatNumber(outputs.ecooking.policy.uptake_ecook, 1)}%`,
+      icon: Leaf,
+      change: 0,
+      changePercent: 0,
+      policy: "Extrapolated policy",
+      cardClass: "bg-gradient-to-br from-emerald-100/40 via-emerald-50 to-background border-emerald-300/40",
+      iconClass: "text-emerald-600",
+    },
+    {
+      title: "Electricity Per Capita",
+      value: `${formatNumber(outputs.nationalElectricityPerCapitaKwh, 1)} kWh`,
+      icon: TrendingUp,
+      change: 0,
+      changePercent: 0,
+      policy: "Extrapolated projection",
+      cardClass: "bg-gradient-to-br from-indigo-100/40 via-indigo-50 to-background border-indigo-300/40",
+      iconClass: "text-indigo-600",
+    },
+    {
       title: "Electricity Tax Revenue",
-      value: `$${formatNumber(outputs.combined.user.electricity_tax / 1000000, 2)}M`,
+      value: `$${formatNumber(electricitySalesTaxUser / 1000000, 2)}M`,
       icon: DollarSign,
-      change: outputs.combined.user.electricity_tax - outputs.combined.policy.electricity_tax,
+      change: electricitySalesTaxUser - electricitySalesTaxPolicy,
       changePercent:
-        outputs.combined.policy.electricity_tax > 0
-          ? ((outputs.combined.user.electricity_tax - outputs.combined.policy.electricity_tax) /
-              outputs.combined.policy.electricity_tax) *
-            100
+        electricitySalesTaxPolicy > 0
+          ? ((electricitySalesTaxUser - electricitySalesTaxPolicy) / electricitySalesTaxPolicy) * 100
           : 0,
-      policy: `$${formatNumber(outputs.combined.policy.electricity_tax / 1000000, 2)}M`,
+      policy: `$${formatNumber(electricitySalesTaxPolicy / 1000000, 2)}M`,
       cardClass: "bg-gradient-to-br from-chart-2/10 via-chart-2/5 to-background border-chart-2/30",
       iconClass: "text-chart-2",
     },
     {
       title: "Fossil Fuel Tax Revenue",
-      value: `$${formatNumber(outputs.combined.user.fossil_tax / 1000000, 2)}M`,
+      value: `$${formatNumber(outputs.combined.user.fossil_tax / 1000000, 2)}`,
       icon: DollarSign,
       change: outputs.combined.user.fossil_tax - outputs.combined.policy.fossil_tax,
       changePercent:
@@ -97,7 +109,7 @@ export default function OverviewPage() {
     },
   ]
 
-  const secondaryCards = [
+  /*const secondaryCards = [
     {
       title: "Forex Exposure",
       value: `$${formatNumber(outputs.combined.user.forex / 1000000, 2)}M`,
@@ -121,7 +133,7 @@ export default function OverviewPage() {
       cardClass: `bg-gradient-to-br from-chart-5/10 via-chart-5/5 to-background border-chart-5/30 ${outputs.combined.tax_position > 0 ? "" : "opacity-75"}`,
       iconClass: outputs.combined.tax_position > 0 ? "text-chart-5" : "text-chart-3",
     },
-    {
+    /*{
       title: "Total Emissions",
       value: `${formatNumber(outputs.combined.user.emissions, 3)} MtCO2e`,
       icon: Leaf,
@@ -136,7 +148,7 @@ export default function OverviewPage() {
       cardClass: "bg-gradient-to-br from-accent/10 via-accent/5 to-background border-accent/30",
       iconClass: "text-accent",
     },
-  ]
+  ]*/
 
   const scatterData = [
     {
@@ -230,13 +242,13 @@ export default function OverviewPage() {
             <DemographicCards
               population={outputs.countryPopulation}
               households={outputs.countryHouseholds}
-              annualDishes={outputs.annualDishes}
+              motorVehiclesOwned={outputs.motorVehiclesOwned}
               country={parameters.sel_country}
               year={parameters.sel_year}
             />
 
-            <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-6">
-              {[...electricityDemandCards, ...secondaryCards].map((metric) => {
+            <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+              {...electricityDemandCards.map((metric) => {
                 const Icon = metric.icon
                 const isPositive = metric.changePercent > 0
                 const ChangeIcon = isPositive ? ArrowUpRight : ArrowDownLeft
