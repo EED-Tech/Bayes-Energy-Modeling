@@ -165,6 +165,21 @@ export function calculateOutputs(params: ModelParameters) {
   const countryPopulation = policy.population
   const countryHouseholds = countryPopulation / countryData.householdSize
   const annualDishes = countryData.dailyDishQuantity * CONSTANTS.daysPerYear
+  const motorVehiclesOwned = lookupTimeseries(
+    params.sel_country,
+    "Motor vehicles owned (units) - extrapolated",
+    params.sel_year,
+  )
+  const nationalElectricityConsumptionTwh = lookupTimeseries(
+    params.sel_country,
+    "National electricity consumption (TWh) - extrapolated BAU",
+    params.sel_year,
+  )
+  const nationalElectricityPerCapitaKwh = lookupTimeseries(
+    params.sel_country,
+    "Electricity per capita (kWh) - extrapolated",
+    params.sel_year,
+  )
   const cookingDelta = params.user_ecook / 100 - policy.policy_ecook_uptake
 
   // ========== ECOOKING POLICY SCENARIO (B64-B76) ==========
@@ -474,6 +489,9 @@ export function calculateOutputs(params: ModelParameters) {
     countryPopulation: safeNumber(countryPopulation),
     countryHouseholds: safeNumber(countryHouseholds),
     annualDishes: safeNumber(annualDishes),
+    motorVehiclesOwned: safeNumber(motorVehiclesOwned),
+    nationalElectricityConsumptionTwh: safeNumber(nationalElectricityConsumptionTwh),
+    nationalElectricityPerCapitaKwh: safeNumber(nationalElectricityPerCapitaKwh),
 
     ecooking: {
       policy: {

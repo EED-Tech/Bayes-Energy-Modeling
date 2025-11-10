@@ -95,7 +95,7 @@ export default function EMobilityPage() {
             <DemographicCards
               population={outputs.countryPopulation}
               households={outputs.countryHouseholds}
-              annualDishes={outputs.annualDishes}
+              motorVehiclesOwned={outputs.motorVehiclesOwned}
               country={parameters.sel_country}
               year={parameters.sel_year}
             />
