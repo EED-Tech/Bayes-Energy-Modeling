@@ -20,6 +20,7 @@ import {
 } from "recharts"
 import { ChartContainer } from "@/components/ui/chart"
 import { CountryMapCard } from "@/components/country-map-card"
+import { MobilityTaxesSection } from "@/components/mobility-taxes-section"
 
 export default function EMobilityPage() {
   const { parameters } = useGlobalState()
@@ -188,6 +189,8 @@ export default function EMobilityPage() {
                 </CardContent>
               </Card>
             </div>
+
+            <MobilityTaxesSection country={parameters.sel_country} />
 
             <div className="grid gap-6 lg:grid-cols-2">
               <Card className="bg-white border border-border/60 shadow-sm">

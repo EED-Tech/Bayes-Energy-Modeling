@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
-import { BarChart3, Flame, Car, TrendingUp, DollarSign } from "lucide-react"
+import { BarChart3, Flame, Car, TrendingUp } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Overview", icon: BarChart3 },
@@ -12,8 +12,6 @@ const navItems = [
   { href: "/emobility", label: "eMobility", icon: Car },
   { href: "/combined", label: "Combined Analysis", icon: TrendingUp },
   { href: "/policy-timelines", label: "Policy Timelines", icon: TrendingUp },
-  { href: "/taxes-levies-cooking", label: "Cooking Taxes", icon: DollarSign },
-  { href: "/taxes-levies-mobility", label: "Mobility Taxes", icon: DollarSign },
 ]
 
 export function Nav() {
