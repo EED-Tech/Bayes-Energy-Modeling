@@ -20,6 +20,7 @@ import {
 } from "recharts"
 import { ChartContainer } from "@/components/ui/chart"
 import { CountryMapCard } from "@/components/country-map-card"
+import { CookingTaxesSection } from "@/components/cooking-taxes-section"
 
 export default function ECookingPage() {
   const { parameters } = useGlobalState()
@@ -81,6 +82,8 @@ export default function ECookingPage() {
               population={outputs.countryPopulation}
               households={outputs.countryHouseholds}
               motorVehiclesOwned={outputs.motorVehiclesOwned}
+              annualDishes={outputs.annualDishes}
+              showAnnualDishes
               country={parameters.sel_country}
               year={parameters.sel_year}
             />
@@ -102,27 +105,23 @@ export default function ECookingPage() {
 
               <Card className="bg-gradient-to-br from-chart-2/5 to-background border-chart-2/20">
                 <CardHeader className="pb-1">
-                  <CardDescription className="text-xs">Fossil/Charcoal Tax</CardDescription>
+                  <CardDescription className="text-xs">Fossil/Charcoal Tax (Policy)</CardDescription>
                   <CardTitle className="text-xl">
-                    ${formatNumber(outputs.ecooking.user.fossil_charcoal_tax / 1000000, 2)}M
+                    ${formatNumber(outputs.ecooking.policy.fossil_charcoal_tax / 1000000, 2)}M
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: ${formatNumber(outputs.ecooking.policy.fossil_charcoal_tax / 1000000, 2)}M
-                  </p>
+                <CardContent className="text-xs text-muted-foreground">
+                  Derived from the extrapolated policy trajectory
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-chart-3/5 to-background border-chart-3/20">
                 <CardHeader className="pb-1">
-                  <CardDescription className="text-xs">Forex Exposure</CardDescription>
-                  <CardTitle className="text-xl">${formatNumber(outputs.ecooking.user.forex / 1000000, 2)}M</CardTitle>
+                  <CardDescription className="text-xs">Forex Exposure (Policy)</CardDescription>
+                  <CardTitle className="text-xl">${formatNumber(outputs.ecooking.policy.forex / 1000000, 2)}M</CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: ${formatNumber(outputs.ecooking.policy.forex / 1000000, 2)}M
-                  </p>
+                <CardContent className="text-xs text-muted-foreground">
+                  Policy scenario reference only
                 </CardContent>
               </Card>
 
@@ -171,6 +170,8 @@ export default function ECookingPage() {
                 </CardContent>
               </Card>
             </div>
+
+            <CookingTaxesSection country={parameters.sel_country} />
 
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>

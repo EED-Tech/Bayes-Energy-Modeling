@@ -44,10 +44,6 @@ export default function OverviewPage() {
     blue: "hsl(217, 91%, 60%)",
   }
 
-  // Mirror 'Variables & Outputs'!B41/B40 combined electricity tax totals from the spreadsheet
-  const electricitySalesTaxUser = outputs.ecooking.user.electricity_tax + outputs.emobility.user.electricity_tax
-  const electricitySalesTaxPolicy = outputs.ecooking.policy.electricity_tax + outputs.emobility.policy.electricity_tax
-
   const electricityDemandCards = [
     {
       title: "National Electricity Consumption",
@@ -78,34 +74,6 @@ export default function OverviewPage() {
       policy: "Extrapolated projection",
       cardClass: "bg-gradient-to-br from-indigo-100/40 via-indigo-50 to-background border-indigo-300/40",
       iconClass: "text-indigo-600",
-    },
-    {
-      title: "Electricity Tax Revenue",
-      value: `$${formatNumber(electricitySalesTaxUser / 1000000, 2)}M`,
-      icon: DollarSign,
-      change: electricitySalesTaxUser - electricitySalesTaxPolicy,
-      changePercent:
-        electricitySalesTaxPolicy > 0
-          ? ((electricitySalesTaxUser - electricitySalesTaxPolicy) / electricitySalesTaxPolicy) * 100
-          : 0,
-      policy: `$${formatNumber(electricitySalesTaxPolicy / 1000000, 2)}M`,
-      cardClass: "bg-gradient-to-br from-chart-2/10 via-chart-2/5 to-background border-chart-2/30",
-      iconClass: "text-chart-2",
-    },
-    {
-      title: "Fossil Fuel Tax Revenue",
-      value: `$${formatNumber(outputs.combined.user.fossil_tax / 1000000, 2)}`,
-      icon: DollarSign,
-      change: outputs.combined.user.fossil_tax - outputs.combined.policy.fossil_tax,
-      changePercent:
-        outputs.combined.policy.fossil_tax > 0
-          ? ((outputs.combined.user.fossil_tax - outputs.combined.policy.fossil_tax) /
-              outputs.combined.policy.fossil_tax) *
-            100
-          : 0,
-      policy: `$${formatNumber(outputs.combined.policy.fossil_tax / 1000000, 2)}M`,
-      cardClass: "bg-gradient-to-br from-chart-3/10 via-chart-3/5 to-background border-chart-3/30",
-      iconClass: "text-chart-3",
     },
   ]
 
@@ -281,7 +249,7 @@ export default function OverviewPage() {
             </div>
 
             {/* Charts Section */}
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card className="border shadow-sm bg-white">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Electricity Demand by Sector</CardTitle>
@@ -331,89 +299,7 @@ export default function OverviewPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border shadow-sm bg-white">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Emissions vs Electricity</CardTitle>
-                  <CardDescription className="text-xs">Sector comparison scatter plot</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <ChartContainer
-                    config={{
-                      "eCooking (User)": { label: "eCooking (User)", color: pageColors.teal },
-                      "eMobility (User)": { label: "eMobility (User)", color: pageColors.grey },
-                      "eCooking (Policy)": { label: "eCooking (Policy)", color: pageColors.teal },
-                      "eMobility (Policy)": { label: "eMobility (Policy)", color: pageColors.blue },
-                    }}
-                    className="h-80"
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ScatterChart margin={{ left: 40, right: 20, top: 20, bottom: 20 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis
-                          type="number"
-                          dataKey="x"
-                          stroke="hsl(var(--foreground))"
-                          fontSize={12}
-                          name="Electricity (GWh)"
-                          label={{ value: "Electricity (GWh)", position: "insideBottomRight", offset: -10 }}
-                        />
-                        <YAxis
-                          stroke="hsl(var(--foreground))"
-                          fontSize={12}
-                          name="Emissions (MtCO2e)"
-                          label={{ value: "Emissions (MtCO2e)", angle: -90, position: "insideLeft" }}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "rgba(255, 255, 255, 0.95)",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                          }}
-                          cursor={{ strokeDasharray: "3 3" }}
-                          content={({ active, payload }) => {
-                            if (active && payload && payload.length) {
-                              const data = payload[0].payload
-                              return (
-                                <div className="bg-white/95 border border-border rounded p-2 text-xs">
-                                  <p className="font-semibold">{data.category}</p>
-                                  <p>Electricity: {formatNumber(data.x, 2)} GWh</p>
-                                  <p>Emissions: {formatNumber(data.y, 3)} MtCO2e</p>
-                                </div>
-                              )
-                            }
-                            return null
-                          }}
-                        />
-                        <Legend />
-                        <Scatter
-                          name="eCooking (User)"
-                          data={[scatterData[0]]}
-                          fill={pageColors.teal}
-                          fillOpacity={0.8}
-                        />
-                        <Scatter
-                          name="eMobility (User)"
-                          data={[scatterData[1]]}
-                          fill={pageColors.grey}
-                          fillOpacity={0.8}
-                        />
-                        <Scatter
-                          name="eCooking (Policy)"
-                          data={[scatterData[2]]}
-                          fill={pageColors.teal}
-                          fillOpacity={0.3}
-                        />
-                        <Scatter
-                          name="eMobility (Policy)"
-                          data={[scatterData[3]]}
-                          fill={pageColors.blue}
-                          fillOpacity={0.3}
-                        />
-                      </ScatterChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
+              
 
               <Card className="border shadow-sm bg-white">
                 <CardHeader className="pb-2">

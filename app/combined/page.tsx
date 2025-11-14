@@ -6,6 +6,7 @@ import { DemographicCards } from "@/components/demographic-cards"
 import { ControlSidebar } from "@/components/control-sidebar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatNumber } from "@/lib/utils"
+import { ArrowDownLeft, ArrowUpRight, DollarSign } from "lucide-react"
 import {
   XAxis,
   YAxis,
@@ -79,6 +80,39 @@ export default function CombinedPage() {
     blue: "hsl(217, 91%, 60%)",
   }
 
+  const revenueCards = [
+    {
+      title: "Electricity Tax Revenue",
+      value: `$${formatNumber(outputs.combined.user.electricity_tax / 1000000, 2)}M`,
+      icon: DollarSign,
+      change: outputs.combined.user.electricity_tax - outputs.combined.policy.electricity_tax,
+      changePercent:
+        outputs.combined.policy.electricity_tax > 0
+          ? ((outputs.combined.user.electricity_tax - outputs.combined.policy.electricity_tax) /
+              outputs.combined.policy.electricity_tax) *
+            100
+          : 0,
+      policy: `$${formatNumber(outputs.combined.policy.electricity_tax / 1000000, 2)}M`,
+      cardClass: "bg-gradient-to-br from-chart-2/10 via-chart-2/5 to-background border-chart-2/30",
+      iconClass: "text-chart-2",
+    },
+    {
+      title: "Fossil Fuel Tax Revenue",
+      value: `$${formatNumber(outputs.combined.user.fossil_tax / 1000000, 2)}M`,
+      icon: DollarSign,
+      change: outputs.combined.user.fossil_tax - outputs.combined.policy.fossil_tax,
+      changePercent:
+        outputs.combined.policy.fossil_tax > 0
+          ? ((outputs.combined.user.fossil_tax - outputs.combined.policy.fossil_tax) /
+              outputs.combined.policy.fossil_tax) *
+            100
+          : 0,
+      policy: `$${formatNumber(outputs.combined.policy.fossil_tax / 1000000, 2)}M`,
+      cardClass: "bg-gradient-to-br from-chart-3/10 via-chart-3/5 to-background border-chart-3/30",
+      iconClass: "text-chart-3",
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       <div className="w-full px-0 py-0">
@@ -106,35 +140,40 @@ export default function CombinedPage() {
               year={parameters.sel_year}
             />
 
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="bg-white border border-border/60 shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2 space-y-1">
-                  <CardDescription className="text-xs">Total Fossil Fuel Tax</CardDescription>
-                  <CardTitle className="text-lg">
-                    ${formatNumber(outputs.combined.user.fossil_tax / 1000000, 2)}M
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">
-                    Policy: ${formatNumber(outputs.combined.policy.fossil_tax / 1000000, 2)}M
-                  </p>
-                </CardContent>
-              </Card>
+            <div className="grid gap-2 md:grid-cols-2">
+              {revenueCards.map((metric) => {
+                const Icon = metric.icon
+                const isPositive = metric.changePercent > 0
+                const ChangeIcon = isPositive ? ArrowUpRight : ArrowDownLeft
 
-              <Card className="bg-white border border-border/60 shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2 space-y-1">
-                  <CardDescription className="text-xs">Total Electricity Tax</CardDescription>
-                  <CardTitle className="text-lg">
-                    ${formatNumber(outputs.combined.user.electricity_tax / 1000000, 2)}M
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">
-                    Policy: ${formatNumber(outputs.combined.policy.electricity_tax / 1000000, 2)}M
-                  </p>
-                </CardContent>
-              </Card>
+                return (
+                  <Card key={metric.title} className={`hover:shadow-lg transition-all ${metric.cardClass} border`}>
+                    <CardHeader className="flex flex-row items-start justify-between pb-1 space-y-0">
+                      <div className="space-y-0.5 flex-1">
+                        <CardTitle className="text-xs font-medium text-muted-foreground">{metric.title}</CardTitle>
+                        <div className="text-base font-bold">{metric.value}</div>
+                      </div>
+                      <Icon className={`h-4 w-4 ${metric.iconClass} opacity-60`} />
+                    </CardHeader>
+                    <CardContent className="space-y-0.5 pt-0">
+                      {metric.change !== 0 && (
+                        <div className="flex items-center gap-1">
+                          <ChangeIcon className={`h-3 w-3 ${isPositive ? "text-chart-3" : "text-chart-1"}`} />
+                          <span className="text-xs font-semibold">
+                            {isPositive ? "+" : ""}
+                            {formatNumber(metric.changePercent, 2)}%
+                          </span>
+                          <span className="text-xs text-muted-foreground">vs policy</span>
+                        </div>
+                      )}
+                      <p className="text-xs text-muted-foreground">Policy: {metric.policy}</p>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
 
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-2">
               <Card className="bg-white border border-border/60 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2 space-y-1">
                   <CardDescription className="text-xs">Total Forex Exposure</CardDescription>
@@ -160,7 +199,7 @@ export default function CombinedPage() {
               </Card>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Card className="bg-white border border-border/60 shadow-sm">
                 <CardHeader>
                   <CardTitle className="text-lg">Electricity Demand Breakdown</CardTitle>
@@ -234,7 +273,7 @@ export default function CombinedPage() {
                 </CardContent>
               </Card>
 
-              <Card className="lg:col-span-2 bg-white border border-border/60 shadow-sm">
+              <Card className="bg-white border border-border/60 shadow-sm">
                 <CardHeader>
                   <CardTitle className="text-lg">Economic Impact Comparison</CardTitle>
                   <CardDescription className="text-xs">Tax revenues and forex exposure (USD millions)</CardDescription>
