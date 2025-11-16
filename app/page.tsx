@@ -250,18 +250,18 @@ export default function OverviewPage() {
 
             {/* Charts Section */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="border shadow-sm bg-white">
+              <Card className="border shadow-sm bg-white h-full flex flex-col">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Electricity Demand by Sector</CardTitle>
                   <CardDescription className="text-xs">GWh comparison</CardDescription>
                 </CardHeader>
-                <CardContent className="p-4">
+                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
                     config={{
                       eCooking: { label: "eCooking", color: pageColors.teal },
                       eMobility: { label: "eMobility", color: pageColors.blue },
                     }}
-                    className="h-80"
+                    className="h-full w-full"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
@@ -301,13 +301,13 @@ export default function OverviewPage() {
 
               
 
-              <Card className="border shadow-sm bg-white">
+              <Card className="border shadow-sm bg-white h-full flex flex-col">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Energy Mix Distribution</CardTitle>
                   <CardDescription className="text-xs">Total electricity demand by sector</CardDescription>
                 </CardHeader>
-                <CardContent className="p-4">
-                  <ChartContainer config={{}} className="h-80">
+                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
+                  <ChartContainer config={{}} className="h-full w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie data={energyMix} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100}>
@@ -330,18 +330,18 @@ export default function OverviewPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border shadow-sm bg-white">
+              <Card className="border shadow-sm bg-white h-full flex flex-col">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Tax Position Impact</CardTitle>
                   <CardDescription className="text-xs">Revenue and forex comparison</CardDescription>
                 </CardHeader>
-                <CardContent className="p-4">
+                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
                     config={{
                       policy: { label: "Policy Baseline", color: pageColors.grey },
                       user: { label: "Your Scenario", color: pageColors.teal },
                     }}
-                    className="h-80"
+                    className="h-full w-full"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={taxPositionData} margin={{ left: 40, right: 20, top: 20, bottom: 50 }}>

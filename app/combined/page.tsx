@@ -200,18 +200,18 @@ export default function CombinedPage() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="bg-white border border-border/60 shadow-sm">
+              <Card className="bg-white border border-border/60 shadow-sm h-full flex flex-col">
                 <CardHeader>
                   <CardTitle className="text-lg">Electricity Demand Breakdown</CardTitle>
                   <CardDescription className="text-xs">eCooking vs eMobility (GWh)</CardDescription>
                 </CardHeader>
-                <CardContent className="p-4">
+                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
                     config={{
                       policy: { label: "Policy Scenario", color: chartColors.grey },
                       user: { label: "Your Scenario", color: chartColors.teal },
                     }}
-                    className="h-80"
+                    className="h-full w-full"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={energyBreakdown}>
@@ -235,17 +235,17 @@ export default function CombinedPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border border-border/60 shadow-sm">
+              <Card className="bg-white border border-border/60 shadow-sm h-full flex flex-col">
                 <CardHeader>
                   <CardTitle className="text-lg">Total Emissions Comparison</CardTitle>
                   <CardDescription className="text-xs">Combined CO2 emissions (MtCO2)</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
                     config={{
                       emissions: { label: "Emissions (MtCO2)", color: chartColors.blue },
                     }}
-                    className="h-80"
+                    className="h-full w-full"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={emissionsData}>
@@ -273,19 +273,19 @@ export default function CombinedPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border border-border/60 shadow-sm">
+              <Card className="bg-white border border-border/60 shadow-sm h-full flex flex-col">
                 <CardHeader>
                   <CardTitle className="text-lg">Economic Impact Comparison</CardTitle>
                   <CardDescription className="text-xs">Tax revenues and forex exposure (USD millions)</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
                     config={{
                       electricityTax: { label: "Electricity Tax", color: chartColors.teal },
                       fossilTax: { label: "Fossil Fuel Tax", color: chartColors.grey },
                       forex: { label: "Forex Exposure", color: chartColors.blue },
                     }}
-                    className="h-80"
+                    className="h-full w-full"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={economicData}>
