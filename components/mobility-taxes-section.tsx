@@ -162,7 +162,11 @@ export function MobilityTaxesSection({ country }: MobilityTaxesSectionProps) {
                         <BarChart data={comparisonData} margin={{ left: 40, right: 20, top: 20, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                           <XAxis dataKey="vehicle" stroke="hsl(var(--foreground))" fontSize={12} />
-                          <YAxis stroke="hsl(var(--foreground))" fontSize={12} />
+                          <YAxis
+                            stroke="hsl(var(--foreground))"
+                            fontSize={12}
+                            label={{ value: "Tax per vehicle ($)", angle: -90, position: "insideLeft" }}
+                          />
                           <Tooltip
                             contentStyle={{
                               backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -274,7 +278,7 @@ export function MobilityTaxesSection({ country }: MobilityTaxesSectionProps) {
                             )}
                             {busEVDetails.recurringEnergy?.rep && (
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">REP:</span>
+                                <span className="text-muted-foreground">Rural Electrification Levy (REA):</span>
                                 <span>${formatNumber(busEVDetails.recurringEnergy.rep, 3)}</span>
                               </div>
                             )}
@@ -333,7 +337,7 @@ export function MobilityTaxesSection({ country }: MobilityTaxesSectionProps) {
                             )}
                             {carEVDetails.recurringEnergy?.rep && (
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">REP:</span>
+                                <span className="text-muted-foreground">Rural Electrification Levy (REA):</span>
                                 <span>${formatNumber(carEVDetails.recurringEnergy.rep, 3)}</span>
                               </div>
                             )}
@@ -398,7 +402,7 @@ export function MobilityTaxesSection({ country }: MobilityTaxesSectionProps) {
                             )}
                             {motorcycleEVDetails.recurringEnergy?.rep && (
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">REP:</span>
+                                <span className="text-muted-foreground">Rural Electrification Levy (REA):</span>
                                 <span>${formatNumber(motorcycleEVDetails.recurringEnergy.rep, 3)}</span>
                               </div>
                             )}

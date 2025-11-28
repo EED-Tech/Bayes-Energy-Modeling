@@ -16,7 +16,13 @@ import {
   Bar,
 } from "recharts"
 import { ChartContainer } from "@/components/ui/chart"
-import { charcoalUseData, biomassUseData, woodFuelUseData, cleanStackData } from "@/lib/policy-timelines-data"
+import {
+  charcoalUseData,
+  biomassUseData,
+  woodFuelUseData,
+  cleanStackData,
+  electricUseData,
+} from "@/lib/policy-timelines-data"
 
 export default function PolicyTimelinesPage() {
   // Prepare data for all countries - clean cooking access
@@ -92,6 +98,7 @@ export default function PolicyTimelinesPage() {
   const biomassData = biomassUseData
   const woodFuelData = woodFuelUseData
   const cleanStackData_all = cleanStackData
+  const electricUse = electricUseData
 
   const colors = {
     Uganda: "#9D4EDD", // Purple
@@ -122,7 +129,12 @@ export default function PolicyTimelinesPage() {
                     <LineChart data={cleanCookingTimeline} margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="year" stroke="hsl(var(--foreground))" fontSize={10} />
-                      <YAxis stroke="hsl(var(--foreground))" fontSize={10} domain={[0, 100]} />
+                      <YAxis
+                        stroke="hsl(var(--foreground))"
+                        fontSize={10}
+                        domain={[0, 100]}
+                        label={{ value: "Access (%)", angle: -90, position: "insideLeft" }}
+                      />
                       <Tooltip
                         contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
                       />
@@ -154,7 +166,12 @@ export default function PolicyTimelinesPage() {
                     <AreaChart data={electricityTimeline} margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="year" stroke="hsl(var(--foreground))" fontSize={10} />
-                      <YAxis stroke="hsl(var(--foreground))" fontSize={10} domain={[0, 100]} />
+                      <YAxis
+                        stroke="hsl(var(--foreground))"
+                        fontSize={10}
+                        domain={[0, 100]}
+                        label={{ value: "Access (%)", angle: -90, position: "insideLeft" }}
+                      />
                       <Tooltip
                         contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
                       />
@@ -187,7 +204,11 @@ export default function PolicyTimelinesPage() {
                     <BarChart data={eCookingTimeline} margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis dataKey="year" stroke="hsl(var(--foreground))" fontSize={10} />
-                      <YAxis stroke="hsl(var(--foreground))" fontSize={10} />
+                      <YAxis
+                        stroke="hsl(var(--foreground))"
+                        fontSize={10}
+                        label={{ value: "Uptake (%)", angle: -90, position: "insideLeft" }}
+                      />
                       <Tooltip
                         contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
                       />
@@ -210,24 +231,31 @@ export default function PolicyTimelinesPage() {
           <Card className="border-0 shadow-sm">
             <CardHeader className="pb-1">
               <CardTitle className="text-base">Cooking Fuel Transitions - Historical Trends</CardTitle>
-              <CardDescription className="text-xs">Fuel use patterns 2000-2018 across all countries</CardDescription>
-            </CardHeader>
-            <CardContent className="p-2">
-              <div className="grid gap-2 grid-cols-1 lg:grid-cols-4">
-                {[
-                  { title: "Charcoal Use", data: charcoalData },
-                  { title: "Biomass Use", data: biomassData },
-                  { title: "Wood Fuel Use", data: woodFuelData },
-                  { title: "Clean Stack", data: cleanStackData_all },
-                ].map((item) => (
-                  <div key={item.title} className="space-y-1">
-                    <h3 className="text-xs font-medium text-center">{item.title}</h3>
-                    <ChartContainer config={{}} className="h-48">
-                      <ResponsiveContainer width="100%" height="100%">
+            <CardDescription className="text-xs">
+              Fuel use patterns 2000-2018 across all countries (eCooking shown explicitly)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-2">
+            <div className="grid gap-2 grid-cols-1 lg:grid-cols-5">
+              {[
+                { title: "Charcoal Use", data: charcoalData },
+                { title: "Biomass Use", data: biomassData },
+                { title: "Wood Fuel Use", data: woodFuelData },
+                { title: "Clean Stack", data: cleanStackData_all },
+                { title: "eCooking Uptake (historical)", data: electricUse },
+              ].map((item) => (
+                <div key={item.title} className="space-y-1">
+                  <h3 className="text-xs font-medium text-center">{item.title}</h3>
+                  <ChartContainer config={{}} className="h-48">
+                    <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={item.data} margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                           <XAxis dataKey="year" stroke="hsl(var(--foreground))" fontSize={9} />
-                          <YAxis stroke="hsl(var(--foreground))" fontSize={9} />
+                          <YAxis
+                            stroke="hsl(var(--foreground))"
+                            fontSize={9}
+                            label={{ value: "Share (%)", angle: -90, position: "insideLeft" }}
+                          />
                           <Tooltip
                             contentStyle={{
                               backgroundColor: "hsl(var(--card))",

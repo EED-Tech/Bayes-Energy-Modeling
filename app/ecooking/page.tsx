@@ -12,7 +12,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  ResponsiveContainer,
   Tooltip,
   Legend,
   Area,
@@ -37,14 +36,14 @@ export default function ECookingPage() {
 
   const chartData = [
     {
-      scenario: "Policy",
+      scenario: "Policy (fixed)",
       electricity: outputs.ecooking.policy.electricity_gwh,
       lpg: outputs.ecooking.policy.lpg_tonnes,
       charcoal: outputs.ecooking.policy.charcoal_tonnes,
       emissions: outputs.ecooking.policy.emissions,
     },
     {
-      scenario: "Your Scenario",
+      scenario: "Your scenario (slider)",
       electricity: outputs.ecooking.user.electricity_gwh,
       lpg: outputs.ecooking.user.lpg_tonnes,
       charcoal: outputs.ecooking.user.charcoal_tonnes,
@@ -87,6 +86,10 @@ export default function ECookingPage() {
               country={parameters.sel_country}
               year={parameters.sel_year}
             />
+            <p className="text-[11px] text-muted-foreground max-w-3xl">
+              Data sources: Population (World Bank, harmonised/extrapolated), Household size (UNDESA + DHS/MICS per
+              country). Total households refer to all households, which can exceed grid-connected customers.
+            </p>
 
             <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-6">
               <Card className="bg-gradient-to-br from-chart-1/5 to-background border-chart-1/20">
@@ -177,7 +180,7 @@ export default function ECookingPage() {
               <Card>
                 <CardHeader className="pb-1">
                   <CardTitle className="text-base">Energy Consumption Comparison</CardTitle>
-                  <CardDescription className="text-xs">Policy vs Your Scenario</CardDescription>
+                  <CardDescription className="text-xs">Policy (fixed) vs Your scenario (slider)</CardDescription>
                 </CardHeader>
                 <CardContent className="p-4">
                   <ChartContainer
@@ -188,25 +191,51 @@ export default function ECookingPage() {
                     }}
                     className="h-80"
                   >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={12} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={12} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "rgba(255, 255, 255, 0.95)",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                            color: "hsl(var(--foreground))",
-                          }}
-                        />
-                        <Legend />
-                        <Line type="monotone" dataKey="electricity" stroke={lineColors.electricity} strokeWidth={2} />
-                        <Line type="monotone" dataKey="lpg" stroke={lineColors.lpg} strokeWidth={2} />
-                        <Line type="monotone" dataKey="charcoal" stroke={lineColors.charcoal} strokeWidth={2} />
-                      </LineChart>
-                    </ResponsiveContainer>
+                    <LineChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={12} />
+                      <YAxis
+                        yAxisId="electricity"
+                        stroke="hsl(var(--foreground))"
+                        fontSize={12}
+                        label={{ value: "Electricity (GWh)", angle: -90, position: "insideLeft" }}
+                      />
+                      <YAxis
+                        yAxisId="fuels"
+                        orientation="right"
+                        stroke="hsl(var(--foreground))"
+                        fontSize={12}
+                        label={{ value: "Fuel (tonnes)", angle: 90, position: "insideRight" }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "rgba(255, 255, 255, 0.95)",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "6px",
+                          color: "hsl(var(--foreground))",
+                        }}
+                        formatter={(value, name) => {
+                          const unit = name?.toLowerCase().includes("electricity") ? "GWh" : "tonnes"
+                          return [`${formatNumber(value as number, 3)} ${unit}`, name]
+                        }}
+                      />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="electricity"
+                        stroke={lineColors.electricity}
+                        strokeWidth={2}
+                        yAxisId="electricity"
+                      />
+                      <Line type="monotone" dataKey="lpg" stroke={lineColors.lpg} strokeWidth={2} yAxisId="fuels" />
+                      <Line
+                        type="monotone"
+                        dataKey="charcoal"
+                        stroke={lineColors.charcoal}
+                        strokeWidth={2}
+                        yAxisId="fuels"
+                      />
+                    </LineChart>
                   </ChartContainer>
                 </CardContent>
               </Card>
@@ -223,28 +252,30 @@ export default function ECookingPage() {
                     }}
                     className="h-80"
                   >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={12} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={12} />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "rgba(255, 255, 255, 0.95)",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                            color: "hsl(var(--foreground))",
-                          }}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="emissions"
-                          stroke={lineColors.charcoal}
-                          fill={lineColors.charcoal}
-                          fillOpacity={0.3}
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
+                    <AreaChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={12} />
+                      <YAxis
+                        stroke="hsl(var(--foreground))"
+                        fontSize={12}
+                        label={{ value: "Emissions (MtCO2)", angle: -90, position: "insideLeft" }}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "rgba(255, 255, 255, 0.95)",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "6px",
+                          color: "hsl(var(--foreground))",
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="emissions"
+                        stroke={lineColors.charcoal}
+                        fill={lineColors.charcoal}
+                        fillOpacity={0.3}
+                      />
+                    </AreaChart>
                   </ChartContainer>
                 </CardContent>
               </Card>

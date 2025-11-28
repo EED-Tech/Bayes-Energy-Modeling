@@ -36,6 +36,7 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
   const electricityDetails = getCookingTaxDetails(country, "Electric")
   const lpgDetails = getCookingTaxDetails(country, "LPG")
   const charcoalDetails = getCookingTaxDetails(country, "Charcoal")
+  const electricityTariff = electricityDetails?.prevailingPrice ?? 0
 
   const taxData = [
     { fuelType: "Electricity", rate: taxRates.electricity, color: "hsl(174, 63%, 50%)", icon: Zap },
@@ -60,7 +61,7 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
   const uniqueTaxes = Array.from(
     new Set(
       [
-        electricityDetails?.recurringPerUnit.rep ? "Rural Electrification Program (REP)" : null,
+        electricityDetails?.recurringPerUnit.rep ? "Rural Electrification Levy (REA)" : null,
         electricityDetails?.recurringPerUnit.waterLevy ? "Water Levy" : null,
         electricityDetails?.recurringPerUnit.regulatorLevy ? "Regulator Levy" : null,
         charcoalDetails?.recurringPerUnit.productionLicense ? "Production License" : null,
@@ -83,9 +84,14 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
           <AccordionItem value="cooking-taxes-details">
             <AccordionTrigger className="text-sm font-medium">Show tax breakdown</AccordionTrigger>
             <AccordionContent className="space-y-5">
+              <p className="text-xs text-muted-foreground">
+                Units: Electricity shown in $/kWh; LPG &amp; Charcoal shown in $/kg. Percentage items apply to the
+                underlying energy charge and are annotated below.
+              </p>
               <div className="grid gap-3 lg:grid-cols-3 md:grid-cols-2">
                 {taxData.map((tax) => {
                   const Icon = tax.icon
+                  const unitLabel = tax.fuelType === "Electricity" ? "$/kWh" : "$/kg"
                   return (
                     <Card key={tax.fuelType} className="bg-teal-50/50 border border-teal-200/30 shadow-none">
                       <CardHeader className="pb-2">
@@ -96,7 +102,7 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
                       </CardHeader>
                       <CardContent>
                         <div className="text-2xl font-bold">${formatNumber(tax.rate, 3)}</div>
-                        <p className="text-xs text-muted-foreground mt-0.5">Per unit (kg/kWh)</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Tax per unit ({unitLabel})</p>
                       </CardContent>
                     </Card>
                   )
@@ -138,7 +144,11 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
                         <BarChart data={chartData} margin={{ left: 40, right: 20, top: 20, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                           <XAxis dataKey="name" stroke="hsl(var(--foreground))" fontSize={12} />
-                          <YAxis stroke="hsl(var(--foreground))" fontSize={12} />
+                          <YAxis
+                            stroke="hsl(var(--foreground))"
+                            fontSize={12}
+                            label={{ value: "Tax per unit ($)", angle: -90, position: "insideLeft" }}
+                          />
                           <Tooltip
                             contentStyle={{
                               backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -223,19 +233,40 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
                           {electricityDetails.recurringPerUnit.waterLevy && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Water Levy:</span>
-                              <span>${formatNumber(electricityDetails.recurringPerUnit.waterLevy, 4)}</span>
+                              <span>${formatNumber(electricityDetails.recurringPerUnit.waterLevy, 4)}/kWh</span>
                             </div>
                           )}
                           {electricityDetails.recurringPerUnit.regulatorLevy && (
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Regulator Levy:</span>
-                              <span>${formatNumber(electricityDetails.recurringPerUnit.regulatorLevy, 4)}</span>
+                              <span className="text-muted-foreground">Regulator levy (of energy charge):</span>
+                              <span className="text-right">
+                                {(electricityDetails.recurringPerUnit.regulatorLevy * 100).toFixed(1)}%
+                                {electricityTariff > 0 && (
+                                  <span className="text-muted-foreground">
+                                    {" "}
+                                    (${formatNumber(
+                                      electricityTariff * electricityDetails.recurringPerUnit.regulatorLevy,
+                                      4,
+                                    )}
+                                    /kWh)
+                                  </span>
+                                )}
+                              </span>
                             </div>
                           )}
                           {electricityDetails.recurringPerUnit.rep && (
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">REP:</span>
-                              <span>${formatNumber(electricityDetails.recurringPerUnit.rep, 4)}</span>
+                              <span className="text-muted-foreground">Rural Electrification Levy (REA):</span>
+                              <span className="text-right">
+                                {(electricityDetails.recurringPerUnit.rep * 100).toFixed(1)}%
+                                {electricityTariff > 0 && (
+                                  <span className="text-muted-foreground">
+                                    {" "}
+                                    (${formatNumber(electricityTariff * electricityDetails.recurringPerUnit.rep, 4)}
+                                    /kWh)
+                                  </span>
+                                )}
+                              </span>
                             </div>
                           )}
                           {electricityDetails.recurringPerUnit.vat && (
@@ -259,13 +290,13 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
                           {lpgDetails.nonRecurring.importDeclarationFees && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Import Declaration:</span>
-                              <span>${formatNumber(lpgDetails.nonRecurring.importDeclarationFees, 3)}</span>
+                              <span>{(lpgDetails.nonRecurring.importDeclarationFees * 100).toFixed(1)}% of CIF</span>
                             </div>
                           )}
                           {lpgDetails.nonRecurring.infrastructuralLevy && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Infrastructural Levy:</span>
-                              <span>${formatNumber(lpgDetails.nonRecurring.infrastructuralLevy, 3)}</span>
+                              <span>{(lpgDetails.nonRecurring.infrastructuralLevy * 100).toFixed(1)}% of CIF</span>
                             </div>
                           )}
                           {lpgDetails.nonRecurring.vat && (
@@ -289,31 +320,31 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
                           {charcoalDetails.recurringPerUnit.productionLicense && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Production License:</span>
-                              <span>${formatNumber(charcoalDetails.recurringPerUnit.productionLicense, 3)}</span>
+                              <span>${formatNumber(charcoalDetails.recurringPerUnit.productionLicense, 3)}/kg</span>
                             </div>
                           )}
                           {charcoalDetails.recurringPerUnit.importDuty && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Import Duty:</span>
-                              <span>${formatNumber(charcoalDetails.recurringPerUnit.importDuty, 3)}</span>
+                              <span>${formatNumber(charcoalDetails.recurringPerUnit.importDuty, 3)}/kg</span>
                             </div>
                           )}
                           {charcoalDetails.recurringPerUnit.movementPermit && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Movement Permit:</span>
-                              <span>${formatNumber(charcoalDetails.recurringPerUnit.movementPermit, 3)}</span>
+                              <span>${formatNumber(charcoalDetails.recurringPerUnit.movementPermit, 3)}/kg</span>
                             </div>
                           )}
                           {charcoalDetails.recurringPerUnit.cessTax && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Cess Tax:</span>
-                              <span>${formatNumber(charcoalDetails.recurringPerUnit.cessTax, 2)}</span>
+                              <span>${formatNumber(charcoalDetails.recurringPerUnit.cessTax, 2)}/kg</span>
                             </div>
                           )}
                           {charcoalDetails.recurringPerUnit.informalTaxes && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Informal Taxes:</span>
-                              <span>${formatNumber(charcoalDetails.recurringPerUnit.informalTaxes, 2)}</span>
+                              <span>${formatNumber(charcoalDetails.recurringPerUnit.informalTaxes, 2)}/kg</span>
                             </div>
                           )}
                         </div>

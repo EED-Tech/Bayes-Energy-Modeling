@@ -214,6 +214,10 @@ export default function OverviewPage() {
               country={parameters.sel_country}
               year={parameters.sel_year}
             />
+            <p className="text-[11px] text-muted-foreground max-w-3xl">
+              Data sources: Population (World Bank, harmonised/extrapolated), Household size (UNDESA + DHS/MICS per
+              country). Total households refer to all households, which can exceed grid-connected customers.
+            </p>
 
             <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
               {...electricityDemandCards.map((metric) => {
@@ -253,7 +257,7 @@ export default function OverviewPage() {
               <Card className="border shadow-sm bg-white h-full flex flex-col">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Electricity Demand by Sector</CardTitle>
-                  <CardDescription className="text-xs">GWh comparison</CardDescription>
+                  <CardDescription className="text-xs">Policy (fixed) vs Your scenario (slider) in GWh</CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
@@ -267,12 +271,12 @@ export default function OverviewPage() {
                       <BarChart
                         data={[
                           {
-                            name: "Policy",
+                            name: "Policy (fixed)",
                             eCooking: outputs.ecooking.policy.electricity_gwh,
                             eMobility: outputs.emobility.policy.electricity_gwh,
                           },
                           {
-                            name: "Your Scenario",
+                            name: "Your scenario (slider)",
                             eCooking: outputs.ecooking.user.electricity_gwh,
                             eMobility: outputs.emobility.user.electricity_gwh,
                           },
@@ -281,7 +285,11 @@ export default function OverviewPage() {
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="name" stroke="hsl(var(--foreground))" fontSize={12} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={12} />
+                        <YAxis
+                          stroke="hsl(var(--foreground))"
+                          fontSize={12}
+                          label={{ value: "Electricity (GWh)", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -333,13 +341,13 @@ export default function OverviewPage() {
               <Card className="border shadow-sm bg-white h-full flex flex-col">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Tax Position Impact</CardTitle>
-                  <CardDescription className="text-xs">Revenue and forex comparison</CardDescription>
+                  <CardDescription className="text-xs">Policy (fixed) vs Your scenario (slider)</CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
                   <ChartContainer
                     config={{
-                      policy: { label: "Policy Baseline", color: pageColors.grey },
-                      user: { label: "Your Scenario", color: pageColors.teal },
+                      policy: { label: "Policy (fixed)", color: pageColors.grey },
+                      user: { label: "Your scenario (slider)", color: pageColors.teal },
                     }}
                     className="h-full w-full"
                   >
@@ -357,7 +365,7 @@ export default function OverviewPage() {
                         <YAxis
                           stroke="hsl(var(--foreground))"
                           fontSize={12}
-                          label={{ value: "Million $", angle: -90, position: "insideLeft" }}
+                          label={{ value: "USD millions", angle: -90, position: "insideLeft" }}
                         />
                         <Tooltip
                           contentStyle={{

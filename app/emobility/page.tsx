@@ -212,7 +212,11 @@ export default function EMobilityPage() {
                       <BarChart data={adoptionData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="category" stroke="hsl(var(--foreground))" fontSize={11} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={11} />
+                        <YAxis
+                          stroke="hsl(var(--foreground))"
+                          fontSize={11}
+                          label={{ value: "Share (%)", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -247,7 +251,11 @@ export default function EMobilityPage() {
                       <LineChart data={energyData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={11} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={11} />
+                        <YAxis
+                          stroke="hsl(var(--foreground))"
+                          fontSize={11}
+                          label={{ value: "Electricity (GWh) / Emissions (MtCO2)", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "rgba(255, 255, 255, 0.95)",

@@ -37,13 +37,13 @@ export default function CombinedPage() {
 
   const economicData = [
     {
-      scenario: "Policy",
+      scenario: "Policy (fixed)",
       electricityTax: outputs.combined.policy.electricity_tax / 1000000,
       fossilTax: outputs.combined.policy.fossil_tax / 1000000,
       forex: outputs.combined.policy.forex / 1000000,
     },
     {
-      scenario: "Your Scenario",
+      scenario: "Your scenario (slider)",
       electricityTax: outputs.combined.user.electricity_tax / 1000000,
       fossilTax: outputs.combined.user.fossil_tax / 1000000,
       forex: outputs.combined.user.forex / 1000000,
@@ -65,11 +65,11 @@ export default function CombinedPage() {
 
   const emissionsData = [
     {
-      scenario: "Policy",
+      scenario: "Policy (fixed)",
       emissions: outputs.combined.policy.emissions ?? 0,
     },
     {
-      scenario: "Your Scenario",
+      scenario: "Your scenario (slider)",
       emissions: outputs.combined.user.emissions ?? 0,
     },
   ]
@@ -217,7 +217,11 @@ export default function CombinedPage() {
                       <BarChart data={energyBreakdown}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="category" stroke="hsl(var(--foreground))" fontSize={11} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={11} />
+                        <YAxis
+                          stroke="hsl(var(--foreground))"
+                          fontSize={11}
+                          label={{ value: "Electricity (GWh)", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -251,7 +255,11 @@ export default function CombinedPage() {
                       <AreaChart data={emissionsData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={11} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={11} />
+                        <YAxis
+                          stroke="hsl(var(--foreground))"
+                          fontSize={11}
+                          label={{ value: "Emissions (MtCO2)", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -291,7 +299,11 @@ export default function CombinedPage() {
                       <BarChart data={economicData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={11} />
-                        <YAxis stroke="hsl(var(--foreground))" fontSize={11} />
+                        <YAxis
+                          stroke="hsl(var(--foreground))"
+                          fontSize={11}
+                          label={{ value: "USD millions", angle: -90, position: "insideLeft" }}
+                        />
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "rgba(255, 255, 255, 0.95)",

@@ -49,7 +49,11 @@ export function EnergyChart({ data }: EnergyChartProps) {
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis dataKey="year" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
-              <YAxis className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+              <YAxis
+                className="text-xs"
+                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                label={{ value: "Energy (kWh)", angle: -90, position: "insideLeft" }}
+              />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Legend />
               <Line type="monotone" dataKey="eCooking" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={{ r: 3 }} />

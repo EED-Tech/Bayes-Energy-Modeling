@@ -59,6 +59,9 @@ export function ControlSidebar() {
             onValueChange={([value]) => updateParameter("user_ecook", value)}
             className="[&_[role=slider]]:bg-primary [&_[role=slider]]:border-primary h-1"
           />
+          <p className="text-[11px] text-muted-foreground leading-tight">
+            Adjusts <span className="font-semibold">Your scenario</span> only. Policy values shown in charts remain fixed.
+          </p>
         </div>
 
         {/* eMobility - Bus */}
