@@ -16,6 +16,7 @@ import {
   Bar,
 } from "recharts"
 import { ChartContainer } from "@/components/ui/chart"
+import { InfoTooltip } from "@/components/info-tooltip"
 import {
   charcoalUseData,
   biomassUseData,
@@ -112,9 +113,15 @@ export default function PolicyTimelinesPage() {
     <div className="min-h-screen bg-background">
       <div className="w-full pl-6 pr-6 py-4">
         <div className="space-y-3">
-          <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight">Cooking Policy Timelines</h1>
-            <p className="text-sm text-muted-foreground">Regional comparison of cooking and energy policy targets</p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight">Cooking Policy Timelines</h1>
+              <p className="text-sm text-muted-foreground">Regional comparison of cooking and energy policy targets</p>
+            </div>
+            <InfoTooltip
+              title="Policy timelines page"
+              description="View clean cooking and electricity access targets over time. Highlights policy trajectories across countries."
+            />
           </div>
 
           <div className="grid gap-2 grid-cols-1 lg:grid-cols-3">

@@ -5,9 +5,10 @@ import { calculateOutputs } from "@/lib/model-data"
 import { DemographicCards } from "@/components/demographic-cards"
 import { ControlSidebar } from "@/components/control-sidebar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { TrendingUp, Zap, DollarSign, Globe, Leaf, ArrowUpRight, ArrowDownLeft } from "lucide-react"
+import { TrendingUp, Zap, Leaf, ArrowUpRight, ArrowDownLeft } from "lucide-react"
 import { formatNumber } from "@/lib/utils"
 import { CountryMapCard } from "@/components/country-map-card"
+import { InfoTooltip } from "@/components/info-tooltip"
 import {
   BarChart,
   Bar,
@@ -54,6 +55,7 @@ export default function OverviewPage() {
       policy: "BAU projection",
       cardClass: "bg-gradient-to-br from-chart-1/10 via-chart-1/5 to-background border-chart-1/30",
       iconClass: "text-chart-1",
+      description: "Total national electricity consumption (TWh) based on BAU projection for the selected year.",
     },
     {
       title: "eCooking Uptake (Policy)",
@@ -64,6 +66,8 @@ export default function OverviewPage() {
       policy: "Extrapolated policy",
       cardClass: "bg-gradient-to-br from-emerald-100/40 via-emerald-50 to-background border-emerald-300/40",
       iconClass: "text-emerald-600",
+      description:
+        "Share of households adopting eCooking under the fixed policy trajectory (not affected by the slider).",
     },
     {
       title: "Electricity Per Capita",
@@ -74,6 +78,7 @@ export default function OverviewPage() {
       policy: "Extrapolated projection",
       cardClass: "bg-gradient-to-br from-indigo-100/40 via-indigo-50 to-background border-indigo-300/40",
       iconClass: "text-indigo-600",
+      description: "Average electricity consumption per person in the selected year.",
     },
   ]
 
@@ -199,12 +204,18 @@ export default function OverviewPage() {
 
           {/* Main Content */}
           <main className="space-y-4 px-8 py-6">
-            <div className="space-y-1">
-              <h1 className="tracking-tight text-balance font-semibold text-2xl">Energy Transition Overview</h1>
-              <p className="text-sm text-muted-foreground text-pretty">
-                Comprehensive analysis of eCooking and eMobility impacts for {parameters.sel_country} in{" "}
-                {parameters.sel_year}
-              </p>
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <h1 className="tracking-tight text-balance font-semibold text-2xl">Energy Transition Overview</h1>
+                <p className="text-sm text-muted-foreground text-pretty">
+                  Comprehensive analysis of eCooking and eMobility impacts for {parameters.sel_country} in{" "}
+                  {parameters.sel_year}
+                </p>
+              </div>
+              <InfoTooltip
+                title="Overview page"
+                description="High-level view of eCooking and eMobility scenarios. Sliders affect only 'Your scenario'; policy values are fixed by timelines."
+              />
             </div>
 
             <DemographicCards
@@ -229,7 +240,12 @@ export default function OverviewPage() {
                   <Card key={metric.title} className={`hover:shadow-lg transition-all ${metric.cardClass} border`}>
                     <CardHeader className="flex flex-row items-start justify-between pb-1 space-y-0">
                       <div className="space-y-0.5 flex-1">
-                        <CardTitle className="text-xs font-medium text-muted-foreground">{metric.title}</CardTitle>
+                        <div className="flex items-center justify-between gap-2">
+                          <CardTitle className="text-xs font-medium text-muted-foreground">{metric.title}</CardTitle>
+                          {metric.description && (
+                            <InfoTooltip title={metric.title} description={metric.description} />
+                          )}
+                        </div>
                         <div className="text-base font-bold">{metric.value}</div>
                       </div>
                       <Icon className={`h-4 w-4 ${metric.iconClass} opacity-60`} />

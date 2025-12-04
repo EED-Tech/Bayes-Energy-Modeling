@@ -237,16 +237,14 @@ export function calculateOutputs(params: ModelParameters) {
   // ========== ECOOKING USER SCENARIO (B79-B91) ==========
   const user_ecook_uptake = params.user_ecook / 100
 
-  let user_lpg_uptake: number
-  let user_charcoal_uptake: number
+  // Reallocate non-eCooking fuels proportionally to the remaining share to avoid collapsing LPG/charcoal to zero.
+  const nonEcookPolicy = policy_lpg_uptake + policy_charcoal_uptake
+  const remainingShare = Math.max(0, 1 - user_ecook_uptake)
+  const lpgWeight = nonEcookPolicy > 0 ? policy_lpg_uptake / nonEcookPolicy : 0.5
+  const charcoalWeight = nonEcookPolicy > 0 ? policy_charcoal_uptake / nonEcookPolicy : 0.5
 
-  if (cookingDelta >= 0) {
-    user_lpg_uptake = Math.max(0, policy_lpg_uptake - Math.max(0, cookingDelta - policy_charcoal_uptake))
-    user_charcoal_uptake = Math.max(0, policy_charcoal_uptake - cookingDelta)
-  } else {
-    user_lpg_uptake = policy_lpg_uptake + Math.min(-cookingDelta, policy_lpg_uptake + policy_ecook_uptake)
-    user_charcoal_uptake = policy_charcoal_uptake + Math.max(0, -cookingDelta - policy_lpg_uptake)
-  }
+  const user_lpg_uptake = remainingShare * lpgWeight
+  const user_charcoal_uptake = remainingShare * charcoalWeight
 
   const user_ecook_electricity_gwh =
     (((annualDishes * user_ecook_uptake * CONSTANTS.avgElectricityEnergyIntensity) /

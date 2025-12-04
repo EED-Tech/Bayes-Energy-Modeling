@@ -21,6 +21,7 @@ import {
 import { ChartContainer } from "@/components/ui/chart"
 import { CountryMapCard } from "@/components/country-map-card"
 import { MobilityTaxesSection } from "@/components/mobility-taxes-section"
+import { InfoTooltip } from "@/components/info-tooltip"
 
 export default function EMobilityPage() {
   const { parameters } = useGlobalState()
@@ -85,12 +86,18 @@ export default function EMobilityPage() {
 
           {/* Main Content */}
           <main className="space-y-4 px-8 py-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-balance text-foreground">eMobility Analysis</h1>
-              <p className="text-sm text-muted-foreground text-pretty">
-                Detailed analysis of electric vehicle adoption and impacts for {parameters.sel_country} in{" "}
-                {parameters.sel_year}
-              </p>
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight text-balance text-foreground">eMobility Analysis</h1>
+                <p className="text-sm text-muted-foreground text-pretty">
+                  Detailed analysis of electric vehicle adoption and impacts for {parameters.sel_country} in{" "}
+                  {parameters.sel_year}
+                </p>
+              </div>
+              <InfoTooltip
+                title="eMobility page"
+                description="Review policy vs user EV scenarios across buses, passenger cars, and motorcycles. Sliders only adjust “Your scenario”."
+              />
             </div>
 
             <DemographicCards
@@ -194,11 +201,17 @@ export default function EMobilityPage() {
 
             <div className="grid gap-6 lg:grid-cols-2">
               <Card className="bg-white border border-border/60 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-lg">EV Adoption by Vehicle Type</CardTitle>
-                  <CardDescription className="text-xs">
-                    Electric vehicle share (%) - Policy vs Your Scenario
-                  </CardDescription>
+                <CardHeader className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">EV Adoption by Vehicle Type</CardTitle>
+                    <CardDescription className="text-xs">
+                      Electric vehicle share (%) - Policy vs Your Scenario
+                    </CardDescription>
+                  </div>
+                  <InfoTooltip
+                    title="EV adoption"
+                    description="Compares policy vs your scenario EV shares for buses, passenger cars, and motorcycles."
+                  />
                 </CardHeader>
                 <CardContent className="p-4">
                   <ChartContainer
@@ -235,9 +248,15 @@ export default function EMobilityPage() {
               </Card>
 
               <Card className="bg-white border border-border/60 shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-lg">Energy & Emissions Comparison</CardTitle>
-                  <CardDescription className="text-xs">Electricity (GWh) and Emissions (MtCO2)</CardDescription>
+                <CardHeader className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-lg">Energy & Emissions Comparison</CardTitle>
+                    <CardDescription className="text-xs">Electricity (GWh) and Emissions (MtCO2)</CardDescription>
+                  </div>
+                  <InfoTooltip
+                    title="Energy & emissions"
+                    description="Tracks electricity demand (GWh) and emissions (MtCO2) for policy vs your scenario."
+                  />
                 </CardHeader>
                 <CardContent>
                   <ChartContainer

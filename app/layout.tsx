@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Nav } from "@/components/nav"
+import { Toaster } from "@/components/ui/sonner"
 import { GlobalStateProvider } from "@/lib/global-state"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -27,6 +28,7 @@ export default function RootLayout({
           <Nav />
           {children}
         </GlobalStateProvider>
+        <Toaster />
         <Analytics />
       </body>
     </html>

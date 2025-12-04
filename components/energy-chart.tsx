@@ -25,7 +25,7 @@ export function EnergyChart({ data }: EnergyChartProps) {
     <Card>
       <CardHeader>
         <CardTitle>Energy Demand</CardTitle>
-        <CardDescription>Projected energy consumption in kWh</CardDescription>
+        <CardDescription>Projected energy consumption in GWh</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer
@@ -52,7 +52,7 @@ export function EnergyChart({ data }: EnergyChartProps) {
               <YAxis
                 className="text-xs"
                 tick={{ fill: "hsl(var(--muted-foreground))" }}
-                label={{ value: "Energy (kWh)", angle: -90, position: "insideLeft" }}
+                label={{ value: "Energy (GWh)", angle: -90, position: "insideLeft" }}
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Legend />

@@ -21,6 +21,7 @@ import {
 } from "recharts"
 import { ChartContainer } from "@/components/ui/chart"
 import { CountryMapCard } from "@/components/country-map-card"
+import { InfoTooltip } from "@/components/info-tooltip"
 
 export default function CombinedPage() {
   const { parameters } = useGlobalState()
@@ -125,11 +126,17 @@ export default function CombinedPage() {
 
           {/* Main Content */}
           <main className="space-y-4 px-8 py-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-balance text-foreground">Combined Analysis</h1>
-              <p className="text-sm text-muted-foreground text-pretty">
-                Integrated view of eCooking and eMobility impacts for {parameters.sel_country} in {parameters.sel_year}
-              </p>
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight text-balance text-foreground">Combined Analysis</h1>
+                <p className="text-sm text-muted-foreground text-pretty">
+                  Integrated view of eCooking and eMobility impacts for {parameters.sel_country} in {parameters.sel_year}
+                </p>
+              </div>
+              <InfoTooltip
+                title="Combined page"
+                description="View eCooking and eMobility together to understand total electricity, emissions, and fiscal positions. Sliders only affect “Your scenario”."
+              />
             </div>
 
             <DemographicCards

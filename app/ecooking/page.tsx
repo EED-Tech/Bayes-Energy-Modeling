@@ -20,6 +20,7 @@ import {
 import { ChartContainer } from "@/components/ui/chart"
 import { CountryMapCard } from "@/components/country-map-card"
 import { CookingTaxesSection } from "@/components/cooking-taxes-section"
+import { InfoTooltip } from "@/components/info-tooltip"
 
 export default function ECookingPage() {
   const { parameters } = useGlobalState()
@@ -69,12 +70,18 @@ export default function ECookingPage() {
 
           {/* Main Content */}
           <main className="space-y-4 px-8 py-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-balance">eCooking Analysis</h1>
-              <p className="text-muted-foreground text-pretty">
-                Detailed analysis of electric cooking adoption and impacts for {parameters.sel_country} in{" "}
-                {parameters.sel_year}
-              </p>
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight text-balance">eCooking Analysis</h1>
+                <p className="text-muted-foreground text-pretty">
+                  Detailed analysis of electric cooking adoption and impacts for {parameters.sel_country} in{" "}
+                  {parameters.sel_year}
+                </p>
+              </div>
+              <InfoTooltip
+                title="eCooking page"
+                description="Explore policy vs user eCooking scenarios, including fuels, emissions, and taxes. Sliders only affect “Your scenario”."
+              />
             </div>
 
             <DemographicCards
@@ -178,9 +185,15 @@ export default function ECookingPage() {
 
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>
-                <CardHeader className="pb-1">
-                  <CardTitle className="text-base">Energy Consumption Comparison</CardTitle>
-                  <CardDescription className="text-xs">Policy (fixed) vs Your scenario (slider)</CardDescription>
+                <CardHeader className="pb-1 flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-base">Energy Consumption Comparison</CardTitle>
+                    <CardDescription className="text-xs">Policy (fixed) vs Your scenario (slider)</CardDescription>
+                  </div>
+                  <InfoTooltip
+                    title="Energy consumption"
+                    description="Compares electricity (GWh) with LPG/charcoal (tonnes) for policy vs your scenario; dual axes prevent scale distortion."
+                  />
                 </CardHeader>
                 <CardContent className="p-4">
                   <ChartContainer
@@ -241,9 +254,15 @@ export default function ECookingPage() {
               </Card>
 
               <Card>
-                <CardHeader className="pb-1">
-                  <CardTitle className="text-base">Emissions Comparison</CardTitle>
-                  <CardDescription className="text-xs">Total CO2 emissions (MtCO2)</CardDescription>
+                <CardHeader className="pb-1 flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-base">Emissions Comparison</CardTitle>
+                    <CardDescription className="text-xs">Total CO2 emissions (MtCO2)</CardDescription>
+                  </div>
+                  <InfoTooltip
+                    title="Emissions comparison"
+                    description="Shows total emissions for policy vs your scenario (MtCO2). Use sliders to see how uptake shifts affect totals."
+                  />
                 </CardHeader>
                 <CardContent className="p-4">
                   <ChartContainer
