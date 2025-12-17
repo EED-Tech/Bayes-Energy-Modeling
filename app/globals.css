@@ -1,0 +1,246 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Primary: Professional teal blue */
+  --primary: 195 85% 41%;
+  --primary-foreground: rgb(236, 239, 240);
+
+  /* Backgrounds */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --card: rgb(221, 242, 243);
+  --card-foreground: 222 47% 11%;
+
+  /* Subtle grey canvas */
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+
+  /* Accent: Teal */
+  --accent: 195 85% 41%;
+  --accent-foreground: 0 0% 100%;
+
+  /* UI Elements */
+  --popover: rgb(221, 238, 240);
+  --popover-foreground: rgb(220, 240, 241);
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 195 85% 41%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+
+  /* Updated chart colors for better contrast and variety - green, blue, orange, purple, red */
+  --chart-1: 142 76% 36%; /* Green for Uganda */
+  --chart-2: 217 91% 60%; /* Blue for Ethiopia */
+  --chart-3: 25 95% 53%; /* Orange for Kenya */
+  --chart-4: 262 83% 58%; /* Purple for Malawi */
+  --chart-5: 346 77% 50%; /* Red for Tanzania */
+
+  /* Sidebar */
+  --sidebar: rgb(169, 210, 213);
+  --sidebar-foreground: rgb(195, 220, 221);
+  --sidebar-primary: 195 85% 41%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 195 85% 41%; /* Changed from grey (210 40% 96%) to teal to match primary brand color */
+  --sidebar-accent-foreground: 0 0% 100%; /* Ensure accent foreground is white for selected tabs */
+  --sidebar-border: 214 32% 91%;
+  --sidebar-ring: 195 85% 41%;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --primary: 199 89% 48%;
+  --primary-foreground: 222 47% 11%;
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 15%;
+  --card-foreground: 210 40% 98%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 199 89% 48%;
+  --accent-foreground: 222 47% 11%;
+  --popover: 222 47% 15%;
+  --popover-foreground: 210 40% 98%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 199 89% 48%;
+
+  /* Dark mode chart colors with same hue but adjusted lightness */
+  --chart-1: 142 76% 45%;
+  --chart-2: 217 91% 70%;
+  --chart-3: 25 95% 63%;
+  --chart-4: 262 83% 68%;
+  --chart-5: 346 77% 60%;
+
+  --sidebar: 222 47% 13%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 199 89% 48%;
+  --sidebar-primary-foreground: 222 47% 11%;
+  --sidebar-accent: 217 33% 17%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 217 33% 17%;
+  --sidebar-ring: 199 89% 48%;
+}
+
+@theme inline {
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --color-primary: oklch(0.5 0.18 195);
+  --color-primary-foreground: oklch(0.98 0 0);
+  --color-background: oklch(0.98 0.005 200);
+  --color-foreground: oklch(0.15 0.02 200);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.15 0.02 200);
+  --color-secondary: oklch(0.96 0.008 200);
+  --color-secondary-foreground: oklch(0.15 0.02 200);
+  --color-muted: oklch(0.92 0.01 200);
+  --color-muted-foreground: oklch(0.55 0.04 200);
+  --color-accent: oklch(0.5 0.18 195);
+  --color-accent-foreground: oklch(0.98 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.15 0.02 200);
+  --color-border: oklch(0.9 0.01 200);
+  --color-input: oklch(0.95 0.01 200);
+  --color-ring: oklch(0.5 0.18 195);
+  --color-destructive: oklch(0.55 0.22 25);
+  --color-destructive-foreground: oklch(0.98 0 0);
+  /* Updated theme chart colors to match new palette */
+  --color-chart-1: oklch(0.52 0.15 145); /* Green */
+  --color-chart-2: oklch(0.65 0.16 240); /* Blue */
+  --color-chart-3: oklch(0.68 0.18 45); /* Orange */
+  --color-chart-4: oklch(0.62 0.2 290); /* Purple */
+  --color-chart-5: oklch(0.58 0.19 15); /* Red */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --color-sidebar: oklch(0.98 0.005 200);
+  --color-sidebar-foreground: oklch(0.15 0.02 200);
+  --color-sidebar-primary: oklch(0.5 0.18 195);
+  --color-sidebar-primary-foreground: oklch(0.98 0 0);
+  --color-sidebar-accent: oklch(0.5 0.18 195); /* Updated to teal */
+  --color-sidebar-accent-foreground: oklch(0.98 0 0);
+  --color-sidebar-border: oklch(0.9 0.01 200);
+  --color-sidebar-ring: oklch(0.5 0.18 195);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  a:hover,
+  button:hover {
+    @apply text-foreground transition-colors;
+  }
+
+  .dark a,
+  .dark button {
+    @apply text-foreground transition-colors duration-200;
+  }
+
+  .dark a:hover,
+  .dark button:hover {
+    @apply text-primary transition-colors;
+  }
+
+  .dark [role="button"]:hover,
+  .dark [role="tab"]:hover {
+    @apply text-primary;
+  }
+}
+
+/* Add shadow utility for subtle card shadows */
+.card-shadow {
+  @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+.card-shadow-lg {
+  @apply shadow-md hover:shadow-lg transition-shadow duration-200;
+}
+
+/* Add chart bar styling for better visibility with colored bars and light text */
+[data-chart] .recharts-bar {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
+}
+
+/* Ensure tooltip text is readable */
+[data-chart] .recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* Fix axis and tooltip text colors */
+[data-chart] .recharts-tooltip-label,
+[data-chart] .recharts-cartesian-axis-tick text,
+[data-chart] .recharts-text {
+  fill: hsl(var(--foreground)) !important;
+  font-weight: 500;
+}
+
+/* Ensure legend is readable */
+[data-chart] .recharts-legend {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Add colored card backgrounds */
+.metric-card {
+  @apply bg-gradient-to-br shadow-sm hover:shadow-md transition-shadow;
+}
+
+.metric-card-1 {
+  @apply from-blue-50 to-cyan-50 border-blue-200/50;
+}
+
+.metric-card-2 {
+  @apply from-teal-50 to-cyan-50 border-teal-200/50;
+}
+
+.metric-card-3 {
+  @apply from-emerald-50 to-teal-50 border-emerald-200/50;
+}
+
+.metric-card-4 {
+  @apply from-sky-50 to-blue-50 border-sky-200/50;
+}
+
+/* Chart styling for better visibility */
+[data-chart] .recharts-bar {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
+}
+
+/* Fix chart text colors for better visibility */
+[data-chart] .recharts-cartesian-axis-tick text,
+[data-chart] .recharts-text {
+  fill: hsl(var(--foreground)) !important;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+[data-chart] .recharts-tooltip-label {
+  color: hsl(var(--foreground)) !important;
+  font-weight: 600;
+}
+
+[data-chart] .recharts-legend-item-text {
+  color: hsl(var(--foreground)) !important;
+  font-weight: 500;
+}
+
+/* Ensure bars use proper colors, not black */
+[data-chart] .recharts-bar-rectangle {
+  opacity: 0.9;
+}
+
+[data-chart] .recharts-bar-rectangle:hover {
+  opacity: 1;
+}
