@@ -26,7 +26,7 @@ export function Nav() {
             <h1 className="text-2xl font-bold mb-1">
               Economic Pathways to Budget-Neutral Energy Transitions: Simulation of Energy Transition Scenarios
             </h1>
-            <p className="text-sm text-teal-50">E - Cooking and E - Mobility energy transition modeling 2000 to 2049</p>
+            <p className="text-sm text-teal-50">E - Cooking and E - Mobility energy transition modeling 2000 to 2050</p>
           </div>
           <div className="flex items-center gap-6 ml-8">
             

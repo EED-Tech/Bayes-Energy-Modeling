@@ -34,7 +34,7 @@ export function ControlSidebar() {
           <Slider
             id="sel_year"
             min={2000}
-            max={2049}
+            max={2050}
             step={1}
             value={[parameters.sel_year]}
             onValueChange={([value]) => updateParameter("sel_year", value)}
