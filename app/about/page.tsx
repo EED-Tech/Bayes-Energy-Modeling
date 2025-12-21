@@ -3,11 +3,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { InfoTooltip } from "@/components/info-tooltip"
 
-const sections = [
+const sections: Array<{
+  title: string
+  description?: string | string[]
+  items?: string[]
+}> = [
   {
     title: "Purpose",
     description:
-      "This dashboard visualizes budget-neutral energy transition scenarios for eCooking and eMobility, comparing fixed policy trajectories to user-adjusted scenarios.",
+      "This dashboard visualizes budget-neutral energy transition scenarios for eCooking and eMobility, comparing Business as usual (BAU), fixed policy trajectories to user-adjusted scenarios.",
   },
   {
     title: "How to use",
@@ -21,8 +25,9 @@ const sections = [
   },
   {
     title: "Data sources",
-    description:
-      "Population: World Bank (harmonised, extrapolated). Household size: UNDESA + DHS/MICS per country. Tax and policy inputs mirror the accompanying Excel model.",
+    description: [
+      "Population: World Bank (harmonised, extrapolated).Household size: UNDESA + DHS/MICS per country.Tax and policy inputs mirror the accompanying Excel model.",
+    ],
   },
 ]
 
@@ -66,7 +71,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent className="space-y-2">
             <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-              {sections[1].items.map((item) => (
+              {sections[1].items?.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
