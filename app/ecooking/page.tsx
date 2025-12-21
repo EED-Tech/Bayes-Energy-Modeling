@@ -192,21 +192,7 @@ export default function ECookingPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: ${formatNumber(outputs.ecooking.policy.electricity_tax / 1000000, 2)}M
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-chart-2/5 to-background border-chart-2/20">
-                <CardHeader className="pb-1">
-                  <CardDescription className="text-xs">Fossil/Charcoal Tax (Policy)</CardDescription>
-                  <CardTitle className="text-xl">
-                    ${formatNumber(outputs.ecooking.policy.fossil_charcoal_tax / 1000000, 2)}M
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  Derived from the extrapolated policy trajectory
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -215,9 +201,7 @@ export default function ECookingPage() {
                   <CardDescription className="text-xs">Forex Exposure (Policy)</CardDescription>
                   <CardTitle className="text-xl">${formatNumber(outputs.ecooking.policy.forex / 1000000, 2)}M</CardTitle>
                 </CardHeader>
-                <CardContent className="text-xs text-muted-foreground">
-                  Policy scenario reference only
-                </CardContent>
+                <CardContent className="text-xs text-muted-foreground">&nbsp;</CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-chart-4/5 to-background border-chart-4/20">
@@ -226,9 +210,7 @@ export default function ECookingPage() {
                   <CardTitle className="text-xl">{formatNumber(outputs.ecooking.user.emissions, 2)} MtCO2</CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: {formatNumber(outputs.ecooking.policy.emissions, 2)} MtCO2
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -240,9 +222,7 @@ export default function ECookingPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: {formatNumber(outputs.ecooking.policy.electricity_gwh, 1)} GWh
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -254,14 +234,7 @@ export default function ECookingPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: $
-                    {formatNumber(
-                      (outputs.ecooking.policy.electricity_tax - outputs.ecooking.policy.forex) / 1000000,
-                      2,
-                    )}
-                    M
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
             </div>

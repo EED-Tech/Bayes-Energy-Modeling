@@ -58,16 +58,16 @@ export default function OverviewPage() {
       description: "Total national electricity consumption (TWh) based on BAU projection for the selected year.",
     },
     {
-      title: "eCooking Uptake (Policy)",
-      value: `${formatNumber(outputs.ecooking.policy.uptake_ecook, 1)}%`,
+      title: "eCooking Uptake (BAU)",
+      value: `${formatNumber(outputs.bau.ecooking_overall, 1)}%`,
       icon: Leaf,
       change: 0,
       changePercent: 0,
-      policy: "Extrapolated policy",
+      policy: "BAU projection",
       cardClass: "bg-gradient-to-br from-emerald-100/40 via-emerald-50 to-background border-emerald-300/40",
       iconClass: "text-emerald-600",
       description:
-        "Share of households adopting eCooking under the fixed policy trajectory (not affected by the slider).",
+        "Share of households adopting eCooking under the BAU clean cooking trajectory using the new timeseries data.",
     },
     {
       title: "Electricity Per Capita",
@@ -250,26 +250,14 @@ export default function OverviewPage() {
                       </div>
                       <Icon className={`h-4 w-4 ${metric.iconClass} opacity-60`} />
                     </CardHeader>
-                    <CardContent className="space-y-0.5 pt-0">
-                      {metric.change !== 0 && (
-                        <div className="flex items-center gap-1">
-                          <ChangeIcon className={`h-3 w-3 ${isPositive ? "text-chart-3" : "text-chart-1"}`} />
-                          <span className="text-xs font-semibold">
-                            {isPositive ? "+" : ""}
-                            {formatNumber(metric.changePercent, 2)}%
-                          </span>
-                          <span className="text-xs text-muted-foreground">vs policy</span>
-                        </div>
-                      )}
-                      <p className="text-xs text-muted-foreground">Policy: {metric.policy}</p>
-                    </CardContent>
+                    <CardContent className="space-y-0.5 pt-0" />
                   </Card>
                 )
               })}
             </div>
 
             {/* Charts Section */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
               <Card className="border shadow-sm bg-white h-full flex flex-col">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base">Electricity Demand by Sector</CardTitle>
@@ -354,52 +342,7 @@ export default function OverviewPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border shadow-sm bg-white h-full flex flex-col">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Tax Position Impact</CardTitle>
-                  <CardDescription className="text-xs">Policy (fixed) vs Your scenario (slider)</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 grow min-h-[240px] sm:min-h-[300px] lg:min-h-[360px]">
-                  <ChartContainer
-                    config={{
-                      policy: { label: "Policy (fixed)", color: pageColors.grey },
-                      user: { label: "Your scenario (slider)", color: pageColors.teal },
-                    }}
-                    className="h-full w-full"
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={taxPositionData} margin={{ left: 40, right: 20, top: 20, bottom: 50 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis
-                          dataKey="name"
-                          stroke="hsl(var(--foreground))"
-                          fontSize={11}
-                          angle={-45}
-                          textAnchor="end"
-                          height={80}
-                        />
-                        <YAxis
-                          stroke="hsl(var(--foreground))"
-                          fontSize={12}
-                          label={{ value: "USD millions", angle: -90, position: "insideLeft" }}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "rgba(255, 255, 255, 0.95)",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                          }}
-                          formatter={(value: number) => `$${formatNumber(value, 2)}M`}
-                          labelFormatter={(label) => `${label}`}
-                        />
-                        <Legend />
-                        <Bar dataKey="policy" fill={pageColors.grey} radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="user" fill={pageColors.teal} radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
+              
             </div>
           </main>
         </div>

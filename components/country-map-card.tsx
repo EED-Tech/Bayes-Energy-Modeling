@@ -6,6 +6,7 @@ import { useGlobalState } from "@/lib/global-state"
 import type { Country } from "@/lib/model-data"
 import { getCountryMetadata } from "@/lib/countries-metadata"
 import Image from "next/image"
+import { useEffect, useState, useTransition } from "react"
 
 interface CountryMapCardProps {
   country: Country
@@ -13,15 +14,25 @@ interface CountryMapCardProps {
 
 export function CountryMapCard({ country }: CountryMapCardProps) {
   const { parameters, setParameters } = useGlobalState()
+  const [pending, startTransition] = useTransition()
+  const [instantCountry, setInstantCountry] = useState<Country>(country)
   const countries: Country[] = ["Kenya", "Uganda", "Tanzania", "Ethiopia", "Malawi"]
-  const metadata = getCountryMetadata(country)
+  const metadata = getCountryMetadata(instantCountry)
+
+  useEffect(() => {
+    setInstantCountry(country)
+  }, [country])
 
   return (
     <Card className="border-chart-1/30 overflow-hidden">
       <CardContent className="p-3 space-y-3">
         <Select
           value={country}
-          onValueChange={(value) => setParameters({ ...parameters, sel_country: value as Country })}
+          onValueChange={(value) => {
+            const newCountry = value as Country
+            setInstantCountry(newCountry)
+            startTransition(() => setParameters({ ...parameters, sel_country: newCountry }))
+          }}
         >
           <SelectTrigger className="w-full h-9 text-sm">
             <SelectValue placeholder="Select country" />
@@ -49,11 +60,12 @@ export function CountryMapCard({ country }: CountryMapCardProps) {
 
         <div className="relative w-full aspect-square bg-muted/20 rounded-lg overflow-hidden flex items-center justify-center">
           <Image
+            key={metadata.mapUrl}
             src={metadata.mapUrl || "/placeholder.svg"}
             alt={`${metadata.name} map`}
             width={240}
             height={240}
-            className="object-contain"
+            className="object-contain transition-opacity duration-150"
             priority
           />
         </div>

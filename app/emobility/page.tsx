@@ -117,9 +117,7 @@ export default function EMobilityPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: ${formatNumber(outputs.emobility.policy.fossil_tax / 1000000, 2)}M
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -131,9 +129,7 @@ export default function EMobilityPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: ${formatNumber(outputs.emobility.policy.electricity_tax / 1000000, 2)}M
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -143,9 +139,7 @@ export default function EMobilityPage() {
                   <CardTitle className="text-lg">${formatNumber(outputs.emobility.user.forex / 1000000, 2)}M</CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: ${formatNumber(outputs.emobility.policy.forex / 1000000, 2)}M
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -155,9 +149,7 @@ export default function EMobilityPage() {
                   <CardTitle className="text-lg">{formatNumber(outputs.emobility.user.emissions, 2)} MtCO2</CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: {formatNumber(outputs.emobility.policy.emissions, 2)} MtCO2
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -169,9 +161,7 @@ export default function EMobilityPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: {formatNumber(outputs.emobility.policy.electricity_gwh, 1)} GWh
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
 
@@ -185,14 +175,7 @@ export default function EMobilityPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <p className="text-muted-foreground">
-                    Policy: $
-                    {formatNumber(
-                      (outputs.emobility.policy.electricity_tax - outputs.emobility.policy.forex) / 1000000,
-                      2,
-                    )}
-                    M
-                  </p>
+                  <p className="text-muted-foreground">&nbsp;</p>
                 </CardContent>
               </Card>
             </div>
@@ -247,50 +230,6 @@ export default function EMobilityPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white border border-border/60 shadow-sm">
-                <CardHeader className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg">Energy & Emissions Comparison</CardTitle>
-                    <CardDescription className="text-xs">Electricity (GWh) and Emissions (MtCO2)</CardDescription>
-                  </div>
-                  <InfoTooltip
-                    title="Energy & emissions"
-                    description="Tracks electricity demand (GWh) and emissions (MtCO2) for policy vs your scenario."
-                  />
-                </CardHeader>
-                <CardContent>
-                  <ChartContainer
-                    config={{
-                      electricity: { label: "Electricity (GWh)", color: chartColors.electricity },
-                      emissions: { label: "Emissions (MtCO2)", color: chartColors.emissions },
-                    }}
-                    className="h-80"
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={energyData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="scenario" stroke="hsl(var(--foreground))" fontSize={11} />
-                        <YAxis
-                          stroke="hsl(var(--foreground))"
-                          fontSize={11}
-                          label={{ value: "Electricity (GWh) / Emissions (MtCO2)", angle: -90, position: "insideLeft" }}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "rgba(255, 255, 255, 0.95)",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "6px",
-                            color: "hsl(var(--foreground))",
-                          }}
-                        />
-                        <Legend />
-                        <Line type="monotone" dataKey="electricity" stroke={chartColors.electricity} strokeWidth={2} />
-                        <Line type="monotone" dataKey="emissions" stroke={chartColors.emissions} strokeWidth={2} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
             </div>
           </main>
         </div>

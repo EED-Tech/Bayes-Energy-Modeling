@@ -11,7 +11,6 @@ const navItems = [
   { href: "/ecooking", label: "eCooking", icon: Flame },
   { href: "/emobility", label: "eMobility", icon: Car },
   { href: "/combined", label: "Combined Analysis", icon: TrendingUp },
-  { href: "/policy-timelines", label: "Policy Timelines", icon: TrendingUp },
   { href: "/about", label: "Explainer", icon: Info },
 ]
 

@@ -25,7 +25,7 @@ import { getCookingTaxRates } from "@/lib/tax-cooking-data"
 import { getCookingTaxDetails } from "@/lib/tax-cooking-data-new"
 import type { Country } from "@/lib/model-data"
 import { formatNumber } from "@/lib/utils"
-import { Zap, Flame, TreeDeciduous } from "lucide-react"
+import { Zap, TreeDeciduous } from "lucide-react"
 
 interface CookingTaxesSectionProps {
   country: Country
@@ -34,13 +34,11 @@ interface CookingTaxesSectionProps {
 export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
   const taxRates = getCookingTaxRates(country)
   const electricityDetails = getCookingTaxDetails(country, "Electric")
-  const lpgDetails = getCookingTaxDetails(country, "LPG")
   const charcoalDetails = getCookingTaxDetails(country, "Charcoal")
   const electricityTariff = electricityDetails?.prevailingPrice ?? 0
 
   const taxData = [
     { fuelType: "Electricity", rate: taxRates.electricity, color: "hsl(174, 63%, 50%)", icon: Zap },
-    { fuelType: "LPG", rate: taxRates.lpg, color: "hsl(220, 13%, 50%)", icon: Flame },
     { fuelType: "Charcoal", rate: taxRates.charcoal, color: "hsl(199, 89%, 48%)", icon: TreeDeciduous },
   ]
 
@@ -68,7 +66,6 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
         charcoalDetails?.recurringPerUnit.movementPermit ? "Movement Permit" : null,
         charcoalDetails?.recurringPerUnit.informalTaxes ? "Informal Taxes" : null,
         charcoalDetails?.recurringPerUnit.cessTax ? "Cess Tax" : null,
-        lpgDetails?.nonRecurring.infrastructuralLevy ? "Infrastructural Levy" : null,
       ].filter(Boolean) as string[],
     ),
   )
@@ -85,7 +82,7 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
             <AccordionTrigger className="text-sm font-medium">Show tax breakdown</AccordionTrigger>
             <AccordionContent className="space-y-5">
               <p className="text-xs text-muted-foreground">
-                Units: Electricity shown in $/kWh; LPG &amp; Charcoal shown in $/kg. Percentage items apply to the
+                Units: Electricity shown in $/kWh; Charcoal shown in $/kg. Percentage items apply to the
                 underlying energy charge and are annotated below.
               </p>
               <div className="grid gap-3 lg:grid-cols-3 md:grid-cols-2">
@@ -273,36 +270,6 @@ export function CookingTaxesSection({ country }: CookingTaxesSectionProps) {
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">VAT:</span>
                               <span>{(electricityDetails.recurringPerUnit.vat * 100).toFixed(0)}%</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {lpgDetails && (
-                      <div className="border-b pb-3">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Flame className="h-4 w-4 text-orange-500" />
-                          <h4 className="font-semibold">LPG</h4>
-                          <span className="ml-auto text-lg font-bold">${formatNumber(taxRates.lpg, 3)}</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          {lpgDetails.nonRecurring.importDeclarationFees && (
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Import Declaration:</span>
-                              <span>{(lpgDetails.nonRecurring.importDeclarationFees * 100).toFixed(1)}% of CIF</span>
-                            </div>
-                          )}
-                          {lpgDetails.nonRecurring.infrastructuralLevy && (
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Infrastructural Levy:</span>
-                              <span>{(lpgDetails.nonRecurring.infrastructuralLevy * 100).toFixed(1)}% of CIF</span>
-                            </div>
-                          )}
-                          {lpgDetails.nonRecurring.vat && (
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">VAT:</span>
-                              <span>{(lpgDetails.nonRecurring.vat * 100).toFixed(0)}%</span>
                             </div>
                           )}
                         </div>

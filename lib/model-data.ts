@@ -44,7 +44,8 @@ const lookupTimeseries = (country: string, metric: string, year: number): number
   for (let col = 3; col <= 53; col++) {
     const colLetter = indexToLetter(col)
     const cellKey = `${colLetter}1`
-    const headerValue = getCell(TimeseriesSheet, cellKey)
+    const rawHeaderValue = getCell(TimeseriesSheet, cellKey)
+    const headerValue = rawHeaderValue === "`" ? 2019 : rawHeaderValue
 
     if (headerValue === year || Number(headerValue) === year) {
       yearCol = col
@@ -184,6 +185,28 @@ export function calculateOutputs(params: ModelParameters) {
     "Electricity per capita (kWh) - extrapolated",
     params.sel_year,
   )
+  const bauCleanCookingAccess = lookupTimeseries(
+    params.sel_country,
+    "Clean cooking access (% stack) - Extrapolated BAU",
+    params.sel_year,
+  )
+  const bauEcookingWithinCleanCookingAccess = lookupTimeseries(
+    params.sel_country,
+    "eCooking within clean cooking access (%) - Extrapolated BAU",
+    params.sel_year,
+  )
+  const bauWoodFuelShare = lookupTimeseries(params.sel_country, "Wood fuel (% stack) - Extrapolated BAU", params.sel_year)
+  const bauCharcoalShare = lookupTimeseries(
+    params.sel_country,
+    "Charcoal (% stack) - Extrapolated BAU",
+    params.sel_year,
+  )
+  const bauLpgShareWithinCleanCookingAccess = lookupTimeseries(
+    params.sel_country,
+    "LPG share within clean cooking access (%) - Extrapolated BAU",
+    params.sel_year,
+  )
+  const bauEcookingOverallShare = bauCleanCookingAccess * bauEcookingWithinCleanCookingAccess
   const cookingDelta = params.user_ecook / 100 - policy.policy_ecook_uptake
 
   // ========== ECOOKING POLICY SCENARIO (B64-B76) ==========
@@ -233,6 +256,36 @@ export function calculateOutputs(params: ModelParameters) {
     policy_lpg_uptake,
     policy_charcoal_uptake,
   })
+
+  // ========== ECOOKING BAU SCENARIO (using BAU fuel shares) ==========
+  const bau_ecook_uptake = bauEcookingOverallShare
+  const bau_lpg_uptake = bauLpgShareWithinCleanCookingAccess
+  const bau_charcoal_uptake = bauCharcoalShare
+
+  const bau_ecook_electricity_gwh =
+    (((annualDishes * bau_ecook_uptake * CONSTANTS.avgElectricityEnergyIntensity) /
+      CONSTANTS.electricityConversionFactor) *
+      countryHouseholds) /
+    1000000
+
+  const bau_ecook_electricity_per_capita = (bau_ecook_electricity_gwh * 1000000) / countryPopulation
+  const bau_ecook_taxes = bau_ecook_electricity_gwh * 1000000 * countryData.electricityTaxRate
+
+  const bau_lpg_consumption_tonnes =
+    (((annualDishes * bau_lpg_uptake * CONSTANTS.avgLPGEnergyIntensity) / CONSTANTS.lpgConversionFactor) *
+      countryHouseholds) /
+    1000
+  const bau_lpg_per_capita = (bau_lpg_consumption_tonnes * 1000) / countryPopulation
+  const bau_lpg_taxes = bau_lpg_consumption_tonnes * 1000 * countryData.lpgTaxRate
+  const bau_lpg_forex = CONSTANTS.lpgLandedPrice * bau_lpg_consumption_tonnes * 1000
+
+  const bau_charcoal_consumption_tonnes =
+    (((annualDishes * bau_charcoal_uptake * CONSTANTS.avgCharcoalEnergyIntensity) /
+      CONSTANTS.charcoalConversionFactor) *
+      countryHouseholds) /
+    1000
+  const bau_charcoal_per_capita = (bau_charcoal_consumption_tonnes * 1000) / countryPopulation
+  const bau_charcoal_taxes = bau_charcoal_consumption_tonnes * 1000 * countryData.charcoalTaxRate
 
   // ========== ECOOKING USER SCENARIO (B79-B91) ==========
   const user_ecook_uptake = params.user_ecook / 100
@@ -434,10 +487,13 @@ export function calculateOutputs(params: ModelParameters) {
   // ========== FINAL OUTPUTS ==========
   const ecooking_fossil_charcoal_tax_policy = policy_lpg_taxes + policy_charcoal_taxes
   const ecooking_fossil_charcoal_tax_user = user_lpg_taxes + user_charcoal_taxes
+  const ecooking_fossil_charcoal_tax_bau = bau_lpg_taxes + bau_charcoal_taxes
   const ecooking_electricity_tax_policy = policy_ecook_taxes
   const ecooking_electricity_tax_user = user_ecook_taxes
+  const ecooking_electricity_tax_bau = bau_ecook_taxes
   const ecooking_forex_policy = policy_lpg_forex
   const ecooking_forex_user = user_lpg_forex
+  const ecooking_forex_bau = bau_lpg_forex
   const ecooking_forex_position = user_lpg_forex - policy_lpg_forex
   const ecooking_tax_position =
     user_ecook_taxes +
@@ -461,6 +517,11 @@ export function calculateOutputs(params: ModelParameters) {
         1000 *
         CONSTANTS.charcoalEmissionFactorEnergy *
         CONSTANTS.charcoalConversionFactor) /
+    1000000
+  const ecooking_emissions_bau =
+    (bau_ecook_electricity_gwh * 1000000 * countryData.gridEmissionFactor +
+      bau_lpg_consumption_tonnes * 1000 * CONSTANTS.lpgEmissionFactorEnergy * CONSTANTS.lpgConversionFactor +
+      bau_charcoal_consumption_tonnes * 1000 * CONSTANTS.charcoalEmissionFactorEnergy * CONSTANTS.charcoalConversionFactor) /
     1000000
 
   const emobility_fossil_tax_policy = policy_petroleum_taxes
@@ -486,6 +547,10 @@ export function calculateOutputs(params: ModelParameters) {
 
   const combined_emissions_policy = emobility_emissions_policy + ecooking_emissions_policy
   const combined_emissions_user = emobility_emissions_user + ecooking_emissions_user
+  const combined_fossil_tax_bau = emobility_fossil_tax_policy + ecooking_fossil_charcoal_tax_bau
+  const combined_electricity_tax_bau = emobility_electricity_tax_policy + ecooking_electricity_tax_bau
+  const combined_forex_bau = emobility_forex_policy + ecooking_forex_bau
+  const combined_emissions_bau = emobility_emissions_policy + ecooking_emissions_bau
 
   return {
     countryPopulation: safeNumber(countryPopulation),
@@ -494,44 +559,69 @@ export function calculateOutputs(params: ModelParameters) {
     motorVehiclesOwned: safeNumber(motorVehiclesOwned),
     nationalElectricityConsumptionTwh: safeNumber(nationalElectricityConsumptionTwh),
     nationalElectricityPerCapitaKwh: safeNumber(nationalElectricityPerCapitaKwh),
+    bau: {
+      clean_cooking_access: safeNumber(bauCleanCookingAccess * 100),
+      ecooking_within_clean: safeNumber(bauEcookingWithinCleanCookingAccess * 100),
+      ecooking_overall: safeNumber(bauEcookingOverallShare * 100),
+      wood_fuel_share: safeNumber(bauWoodFuelShare * 100),
+      charcoal_share: safeNumber(bauCharcoalShare * 100),
+      lpg_within_clean: safeNumber(bauLpgShareWithinCleanCookingAccess * 100),
+      ecooking: {
+        uptake_ecook: safeNumber(bau_ecook_uptake * 100),
+        uptake_lpg: safeNumber(bau_lpg_uptake * 100),
+        uptake_charcoal: safeNumber(bau_charcoal_uptake * 100),
+        electricity_gwh: safeNumber(bau_ecook_electricity_gwh),
+        electricity_per_capita: safeNumber(bau_ecook_electricity_per_capita),
+        lpg_tonnes: safeNumber(bau_lpg_consumption_tonnes),
+        lpg_per_capita: safeNumber(bau_lpg_per_capita),
+        charcoal_tonnes: safeNumber(bau_charcoal_consumption_tonnes),
+        charcoal_per_capita: safeNumber(bau_charcoal_per_capita),
+        fossil_charcoal_tax: safeNumber(ecooking_fossil_charcoal_tax_bau),
+        electricity_tax: safeNumber(ecooking_electricity_tax_bau),
+        lpg_tax: safeNumber(bau_lpg_taxes),
+        charcoal_tax: safeNumber(bau_charcoal_taxes),
+        forex: safeNumber(ecooking_forex_bau),
+        emissions: safeNumber(ecooking_emissions_bau),
+      },
+    },
 
     ecooking: {
       policy: {
         uptake_ecook: safeNumber(policy_ecook_uptake * 100),
         uptake_lpg: safeNumber(policy_lpg_uptake * 100),
-        uptake_charcoal: safeNumber(policy_charcoal_uptake * 100),
-        electricity_gwh: safeNumber(policy_ecook_electricity_gwh),
-        electricity_per_capita: safeNumber(policy_ecook_electricity_per_capita),
-        lpg_tonnes: safeNumber(policy_lpg_consumption_tonnes),
-        lpg_per_capita: safeNumber(policy_lpg_per_capita),
-      charcoal_tonnes: safeNumber(policy_charcoal_consumption_tonnes),
-      charcoal_per_capita: safeNumber(policy_charcoal_per_capita),
-      fossil_charcoal_tax: safeNumber(ecooking_fossil_charcoal_tax_policy),
-      electricity_tax: safeNumber(ecooking_electricity_tax_policy),
-      lpg_tax: safeNumber(policy_lpg_taxes),
-      charcoal_tax: safeNumber(policy_charcoal_taxes),
-      forex: safeNumber(ecooking_forex_policy),
-      emissions: safeNumber(ecooking_emissions_policy),
-    },
-    user: {
-      uptake_ecook: safeNumber(user_ecook_uptake * 100),
+      uptake_charcoal: safeNumber(policy_charcoal_uptake * 100),
+      electricity_gwh: safeNumber(policy_ecook_electricity_gwh),
+      electricity_per_capita: safeNumber(policy_ecook_electricity_per_capita),
+      lpg_tonnes: safeNumber(policy_lpg_consumption_tonnes),
+      lpg_per_capita: safeNumber(policy_lpg_per_capita),
+        charcoal_tonnes: safeNumber(policy_charcoal_consumption_tonnes),
+        charcoal_per_capita: safeNumber(policy_charcoal_per_capita),
+        fossil_charcoal_tax: safeNumber(ecooking_fossil_charcoal_tax_policy),
+        electricity_tax: safeNumber(ecooking_electricity_tax_policy),
+        lpg_tax: safeNumber(policy_lpg_taxes),
+        charcoal_tax: safeNumber(policy_charcoal_taxes),
+        forex: safeNumber(ecooking_forex_policy),
+        emissions: safeNumber(ecooking_emissions_policy),
+      },
+      user: {
+        uptake_ecook: safeNumber(user_ecook_uptake * 100),
         uptake_lpg: safeNumber(user_lpg_uptake * 100),
         uptake_charcoal: safeNumber(user_charcoal_uptake * 100),
         electricity_gwh: safeNumber(user_ecook_electricity_gwh),
         electricity_per_capita: safeNumber(user_ecook_electricity_per_capita),
         lpg_tonnes: safeNumber(user_lpg_consumption_tonnes),
         lpg_per_capita: safeNumber(user_lpg_per_capita),
-      charcoal_tonnes: safeNumber(user_charcoal_consumption_tonnes),
-      charcoal_per_capita: safeNumber(user_charcoal_per_capita),
-      fossil_charcoal_tax: safeNumber(ecooking_fossil_charcoal_tax_user),
-      electricity_tax: safeNumber(ecooking_electricity_tax_user),
-      lpg_tax: safeNumber(user_lpg_taxes),
-      charcoal_tax: safeNumber(user_charcoal_taxes),
-      forex: safeNumber(ecooking_forex_user),
-      emissions: safeNumber(ecooking_emissions_user),
-    },
-    forex_position: safeNumber(ecooking_forex_position),
-    tax_position: safeNumber(ecooking_tax_position),
+        charcoal_tonnes: safeNumber(user_charcoal_consumption_tonnes),
+        charcoal_per_capita: safeNumber(user_charcoal_per_capita),
+        fossil_charcoal_tax: safeNumber(ecooking_fossil_charcoal_tax_user),
+        electricity_tax: safeNumber(ecooking_electricity_tax_user),
+        lpg_tax: safeNumber(user_lpg_taxes),
+        charcoal_tax: safeNumber(user_charcoal_taxes),
+        forex: safeNumber(ecooking_forex_user),
+        emissions: safeNumber(ecooking_emissions_user),
+      },
+      forex_position: safeNumber(ecooking_forex_position),
+      tax_position: safeNumber(ecooking_tax_position),
     },
 
     emobility: {
@@ -586,6 +676,12 @@ export function calculateOutputs(params: ModelParameters) {
       },
       forex_position: safeNumber(combined_forex_position),
       tax_position: safeNumber(combined_tax_position),
+    },
+    bau_combined: {
+      fossil_tax: safeNumber(combined_fossil_tax_bau),
+      electricity_tax: safeNumber(combined_electricity_tax_bau),
+      forex: safeNumber(combined_forex_bau),
+      emissions: safeNumber(combined_emissions_bau),
     },
   }
 }
